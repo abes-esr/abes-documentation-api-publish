@@ -10,4 +10,4 @@ COPY . .
 RUN pip install lib/scenaripy_api-6.4.0.tar.gz
 RUN pip install lib/SCENARIchain-server_6.3.13final_python.tar.gz
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

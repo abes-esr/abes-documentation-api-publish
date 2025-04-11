@@ -1,0 +1,9 @@
+{ "directories_to_purge": [
+    "skin",
+    "res",
+    "co",
+    "lib-md",
+    "meta",
+    "lib-sc"
+]
+}

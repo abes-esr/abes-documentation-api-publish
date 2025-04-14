@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-COPY ./docker/env_placeholder .env
+COPY docker/env_placeholder .env
 
 RUN pip install lib/scenaripy_api-6.4.0.tar.gz
 RUN pip install lib/SCENARIchain-server_6.3.13final_python.tar.gz

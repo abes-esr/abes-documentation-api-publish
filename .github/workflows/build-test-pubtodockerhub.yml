@@ -45,6 +45,6 @@ jobs:
           for DOCKER_TAG in $DOCKER_TAGS
           do
             # publication de l'image pour le front
-            docker build . -t ${DOCKER_TAG}-front
-            docker push ${DOCKER_TAG}-front
+            docker build . -t ${DOCKER_TAG}-documentation-api-publish
+            docker push ${DOCKER_TAG}-documentation-api-publish
           done

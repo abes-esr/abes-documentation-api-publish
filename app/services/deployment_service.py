@@ -27,10 +27,10 @@ config_directory = os.path.join(project_root, 'config')
 # Charger les mappages à partir des fichiers JSON
 DEPLOYMENT_MANUALS_MAP = load_json_config(os.path.join(config_directory, 'deployment_manuals.json'))
 SCENARI_MANUALS_MAP = load_json_config(os.path.join(config_directory, 'scenari_manuals.json'))
-# Charger la liste des répertoires à purger
-directories_to_purge_config = load_json_config(os.path.join(config_directory, 'directories_to_purge.json'))
-DIRECTORIES_TO_PURGE = directories_to_purge_config.get("directories_to_purge", [])
-
+# Charger la liste des répertoires et fichiers à purger
+items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))
+DIRECTORIES_TO_PURGE = items_to_purge_config.get("directories_to_purge", [])
+FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])
 
 def deploy_manuals(manuals):
     print(f"Deploying manuals: {manuals}")
@@ -69,6 +69,21 @@ def purge_directory(manual):
             print(f"Directory {directory_to_delete} removed successfully.")
         except Exception as e:
             print(f"Error removing directory {directory_to_delete}: {e}")
+
+    for file in FILES_TO_PURGE:
+        file_to_delete = local_path + file
+        print(file_to_delete)
+        try:
+            # Vérifie si le chemin existe
+            if not os.path.exists(file_to_delete):
+                print(f"File {file_to_delete} does not exist.")
+                return
+
+            # Supprime le répertoire et tout son contenu
+            os.remove(file_to_delete)
+            print(f"File {file_to_delete} removed successfully.")
+        except Exception as e:
+            print(f"Error removing file {file_to_delete}: {e}")
     return {"success": True, "message": "Purge successful"}
 
 

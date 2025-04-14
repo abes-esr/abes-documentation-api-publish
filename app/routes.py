@@ -4,7 +4,11 @@ import logging
 
 router = APIRouter()
 
-@router.get("/deploy")
+@router.get("/list")
+async def list_available_manuals():
+    return list_manuals()
+
+@router.put("/deploy")
 async def deploy(manuels: list[str] = Query(...)):
     logging.info("{str(manuels)}")
     status = deploy_manuals(manuels)
@@ -12,18 +16,14 @@ async def deploy(manuels: list[str] = Query(...)):
         raise HTTPException(status_code=500, detail="Deployment failed")
     return status
 
-@router.get("/list")
-async def list_available_manuals():
-    return list_manuals()
-
-@router.get("/deploy_all")
+@router.put("/deploy_all")
 async def deploy_all():
     status = deploy_all_manuals()
     if not status["success"]:
         raise HTTPException(status_code=500, detail="Deployment failed")
     return status
 
-@router.get("/purge_directory")
+@router.delete("/purge_directory")
 async def purge_dir(manuel: str = Query(...)):
     status = purge_directory(manuel)
     if not status["success"]:

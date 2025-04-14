@@ -1,7 +1,5 @@
 FROM python:3.11-slim
 
-COPY ./docker/env_placeholders .env
-
 WORKDIR /app
 
 COPY . .

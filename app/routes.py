@@ -19,27 +19,38 @@ class Manual(BaseModel):
 
 @router.get("/liste")
 async def list_available_manuals():
+    """
+    Donne la liste de tous les manuels de la base de données de l'API
+    """
     return list_manuals()
 
 
 @router.put("/deploy")
-async def deploy(manual: list[ManualEnum] = Query(...)):
-    logging.info("{str(manual)}")
-    status = deploy_manuals(manual)
+async def deploy(manuals: list[ManualEnum] = Query(...)):
+    """
+    Déploie un ou plusieurs manuels en purgeant les fichiers scenari.
+    """
+    status = deploy_manuals(manuals)
     if not status["success"]:
         raise HTTPException(status_code=500, detail="Deployment failed")
     return status
 
 @router.put("/deploy_all")
 async def deploy_all():
+    """
+    Déploie tous les manuels en purgeant les fichiers scenari.
+    """
     status = deploy_all_manuals()
     if not status["success"]:
         raise HTTPException(status_code=500, detail="Deployment failed")
     return status
 
 @router.delete("/purge_directory")
-async def purge_dir(manuel: str = Query(...)):
-    status = purge_directory(manuel)
+async def purge_dir(manuals: list[ManualEnum] = Query(...)):
+    """
+    Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
+    """
+    status = purge_directory(manuals)
     if not status["success"]:
         raise HTTPException(status_code=500, detail="Purge failed")
     return status

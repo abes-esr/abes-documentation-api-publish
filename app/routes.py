@@ -27,7 +27,7 @@ async def deploy_all():
 async def purge_dir(manuel: str = Query(...)):
     status = purge_directory(manuel)
     if not status["success"]:
-        raise HTTPException(status_code=500, detail="Deployment failed")
+        raise HTTPException(status_code=500, detail="Purge failed")
     return status
 
 def init_routes(app):

@@ -4,7 +4,7 @@ from .routes import init_routes
 from fastapi.middleware.cors import CORSMiddleware
 
 def create_app():
-    app = FastAPI(title="documentation-api-publish")
+    app = FastAPI(title="API de publication des manuels de l'ABES",swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian"}})
     app.add_middleware(
         CORSMiddleware,
         allow_origins=['*'],

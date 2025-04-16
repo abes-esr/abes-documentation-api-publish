@@ -1,17 +1,31 @@
+import os
+from enum import Enum
+
 from fastapi import APIRouter, HTTPException, Query
-from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory
+from pydantic import BaseModel
+
+from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory, \
+    load_json_config, config_directory
 import logging
 
 router = APIRouter()
 
-@router.get("/list")
+DEPLOYMENT_MANUALS_MAP = load_json_config(os.path.join(config_directory, 'deployment_manuals.json'))
+ManualEnum = Enum('ManualEnum', {key: key for key in DEPLOYMENT_MANUALS_MAP.keys()})
+
+class Manual(BaseModel):
+    name: str
+    name: ManualEnum
+
+@router.get("/liste")
 async def list_available_manuals():
     return list_manuals()
 
+
 @router.put("/deploy")
-async def deploy(manuels: list[str] = Query(...)):
-    logging.info("{str(manuels)}")
-    status = deploy_manuals(manuels)
+async def deploy(manual: list[ManualEnum] = Query(...)):
+    logging.info("{str(manual)}")
+    status = deploy_manuals(manual)
     if not status["success"]:
         raise HTTPException(status_code=500, detail="Deployment failed")
     return status

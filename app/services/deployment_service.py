@@ -36,7 +36,9 @@ FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])
 def deploy_manuals(manuals):
     print(f"Deploying manuals: {manuals}")
 
-    for manual in manuals:
+    for manual_enum in manuals:
+        manual = manual_enum.value
+
         if manual not in SCENARI_MANUALS_MAP.keys():
             raise HTTPException(status_code=404, detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
 

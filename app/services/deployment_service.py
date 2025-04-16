@@ -9,6 +9,7 @@ import os
 
 logger = logging.getLogger(__name__)
 
+
 def load_json_config(file_path):
     """
     Charge un fichier JSON et retourne le dictionnaire correspondant.
@@ -23,6 +24,7 @@ def load_json_config(file_path):
         print(f"Erreur lors du chargement du fichier {file_path}: {e}")
         return {}
 
+
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 config_directory = os.path.join(project_root, 'config')
 # Charger les mappages à partir des fichiers JSON
@@ -33,6 +35,7 @@ items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_t
 DIRECTORIES_TO_PURGE = items_to_purge_config.get("directories_to_purge", [])
 FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])
 
+
 def deploy_manuals(manuals):
     print(f"Deploying manuals: {manuals}")
 
@@ -40,10 +43,12 @@ def deploy_manuals(manuals):
         manual = manual_enum.value
 
         if manual not in SCENARI_MANUALS_MAP.keys():
-            raise HTTPException(status_code=404, detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
+            raise HTTPException(status_code=404,
+                                detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
 
         if manual not in DEPLOYMENT_MANUALS_MAP.keys():
-            raise HTTPException(status_code=404, detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
+            raise HTTPException(status_code=404,
+                                detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
         purge_directory(manual)
         generate_manual(SCENARI_MANUALS_MAP[manual])
@@ -63,6 +68,8 @@ def deploy_all_manuals():
 
 
 def purge_directory(manuals):
+    print(f"Deploying manuals: {manuals}")
+
     for manual_enum in manuals:
         manual = manual_enum.value
 
@@ -96,6 +103,7 @@ def purge_directory(manuals):
                 print(f"File {file_to_delete} removed successfully.")
             except Exception as e:
                 print(f"Error removing file {file_to_delete}: {e}")
+
     return {"success": True, "message": "Purge successful"}
 
 

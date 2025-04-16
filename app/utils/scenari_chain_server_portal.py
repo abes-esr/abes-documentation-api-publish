@@ -16,6 +16,7 @@ class ScenariChainServerPortal:
 
     def generate(self, pub_uri):
         api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.GENERATION_GENERATOR, props={"skin": config.GENERATION_SKIN}, local_file_path=self.gen_path)
+        #TODO Gérer les retours erreur
         while not os.path.exists(self.gen_path):
             logger.info("Attente de la création du fichier gen.zip...")
             time.sleep(5)  # Attendre 5 secondes avant de revérifier

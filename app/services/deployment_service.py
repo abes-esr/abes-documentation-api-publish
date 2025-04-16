@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
 from app.config import config
 import json
@@ -36,6 +37,12 @@ def deploy_manuals(manuals):
     print(f"Deploying manuals: {manuals}")
 
     for manual in manuals:
+        if manual not in SCENARI_MANUALS_MAP.keys():
+            raise HTTPException(status_code=404, detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
+
+        if manual not in DEPLOYMENT_MANUALS_MAP.keys():
+            raise HTTPException(status_code=404, detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
+
         purge_directory(manual)
         generate_manual(SCENARI_MANUALS_MAP[manual])
         unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])

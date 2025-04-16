@@ -1,10 +1,10 @@
 FROM python:3.11-slim
 
-RUN mkdir tmp
 WORKDIR /app
 
 COPY . .
 COPY requirements.txt requirements.txt
+RUN mkdir -p ../tmp
 
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install lib/scenaripy_api-6.4.0.tar.gz

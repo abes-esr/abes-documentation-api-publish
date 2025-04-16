@@ -43,6 +43,6 @@ jobs:
           for DOCKER_TAG in $DOCKER_TAGS
           do
             # publication de l'image pour le front
-            docker build --build-arg GENERATION_SCENARI_API_FOLDER=${DOCKER_TAG} . -t ${DOCKER_TAG}-documentation-api-publish
+            docker build --build-arg GENERATION_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t ${DOCKER_TAG}-documentation-api-publish
             docker push ${DOCKER_TAG}-documentation-api-publish
           done

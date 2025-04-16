@@ -21,13 +21,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-
       - name: "Build: checkout source code"
         uses: actions/checkout@v2
       - name: "Build: build docker image"
         run: |
           docker build --build-arg GENERATION_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t localimage:latest
-
 
       - name: "Push: prepare version from git tags/branchs"
         id: docker_tag_meta

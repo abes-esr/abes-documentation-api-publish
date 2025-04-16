@@ -4,8 +4,8 @@ from enum import Enum
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
-from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory, \
-    load_json_config, config_directory
+from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals,  \
+    load_json_config, config_directory, purge_directory_list
 import logging
 
 router = APIRouter()
@@ -45,12 +45,12 @@ async def deploy_all():
         raise HTTPException(status_code=500, detail="Deployment failed")
     return status
 
-@router.delete("/purge_directory")
-async def purge_dir(manuals: list[ManualEnum] = Query(...)):
+@router.delete("/purge")
+async def purge_directory(manuals: list[ManualEnum] = Query(...)):
     """
     Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
     """
-    status = purge_directory(manuals)
+    status = purge_directory_list(manuals)
     if not status["success"]:
         raise HTTPException(status_code=500, detail="Purge failed")
     return status

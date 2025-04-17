@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 logger = logging.getLogger('uvicorn.error')
 
 def create_app():
-    app = FastAPI(title="API de publication des manuels de l'ABES", swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian"}})
+    app = FastAPI(title="API de publication des manuels de l'ABES", swagger_ui_parameters={"syntaxHighlight": {"theme": "agate", "activated": True}, "showExtensions": False, "showCommonExtensions": False, "deepLinking": False})
     app.add_middleware(
         CORSMiddleware,
         allow_origins=['*'],

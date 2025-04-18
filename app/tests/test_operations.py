@@ -1,12 +1,11 @@
 import unittest
 import os
-import shutil
 import logging
 
 from app.config import config
 from app.services.deployment_service import purge_directory
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('uvicorn.error')
 
 
 class TestOperations(unittest.TestCase):
@@ -19,7 +18,7 @@ class TestOperations(unittest.TestCase):
                 os.makedirs(config.DEPLOYMENT_LOCAL_PATH + directory_name, exist_ok=True)
                 self.assertTrue(os.path.exists(config.DEPLOYMENT_LOCAL_PATH + directory_name))
             except Exception as e:
-                logger.error(f"Erreur lors de la création du répertoire: {directory_name}")
+                logger.error(f"Erreur lors de la création du répertoire {directory_name}: {e}")
 
     def test_purge_directory(self):
         self.setUp()

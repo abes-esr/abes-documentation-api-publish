@@ -1,0 +1,23 @@
+{
+  "ManuelCidemis": "/ManuelCidemis/00-Structure/Cidemis.pub",
+  "ManuelColodus": "/ManuelColodus/00-Structure/Colodus.pub",
+  "ManuelExportsDemande":  "/ManuelExportsDemande/00-Structure/FormExport.pub",
+  "ManuelItem": "/ManuelItem/00-Structure/Item.pub",
+  "ManuelLicencesNationales":  "/ManuelLicencesNationales/00-Structure/ManuelLicencesNationales.pub",
+  "ManuelPeriscope": "/ManuelPeriscope/00-Structure/Periscope.pub",
+  "ManuelQualiMarc":  "/ManuelQualiMarc/00-Structure/QualiMarc.pub",
+  "ManuelRetro": "/ManuelRetro/00-Structure/AideSignalementRetrospectif.pub",
+  "ManuelSciencePlus":  "/ManuelSciencePlus/00-Structure/SciencePlusAbes.pub",
+  "ManuelSelfSudoc": "/ManuelSelfSudoc/00-Structure/SelfSudoc.pub",
+  "ManuelBacon":  "/ManuelsBacon/ManuelBacon/00-Structure/Bacon.pub",
+  "ManuelBaconAnglais": "/ManuelsBacon/ManuelBaconAnglais/00-Structure/HandbookBacon.pub",
+  "OwnCloudWebdav":  "/ManuelsBacon/OwnCloudWebdav/00-Structure/Webdav.pub",
+  "QualiteImportsBacon": "/ManuelsBacon/QualiteImportsBacon/00-Structure/QualiteDesImportsDansBacon.pub",
+  "CalamesModeEmploi":  "/ManuelsCalames/CalamesModeEmploi/00-Structure/CalamesModeEmploi.pub",
+  "ManuelCalamesCatalogageEad": "/ManuelsCalames/ManuelCalamesCatalogageEad/00-Structure/ManuelCalamesCatalogageEad.pub",
+  "ManuelCalamesInformaticien":  "/ManuelsCalames/ManuelCalamesInformaticien/00-Structure/ManuelCalamesInformaticien.pub",
+  "ManuelCalamesOutilDeCatalogage": "/ManuelsCalames/ManuelCalamesOutilDeCatalogage/00-Structure/ManuelCalamesOutilDeCatalogage.pub",
+  "GestionBibReseauSudoc":  "/ManuelsGm/AdministrationOutil/GestionBibReseauSudoc/00-Structure/GestionBibReseauSudoc.pub",
+  "GestionUtilisateurProSudoc": "/ManuelsGm/AdministrationOutil/GestionUtilisateurProSudoc/00-Structure/GestionUtilisateurProSudoc.pub",
+  "GestionUtilisateurProSudocPs":  "/ManuelsGm/AdministrationOutil/GestionUtilisateurProSudocPs/00-Structure/GestionUtilisateurProSudocPs"
+}

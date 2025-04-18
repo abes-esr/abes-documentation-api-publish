@@ -38,6 +38,7 @@ class ScenariChainServerPortal:
 
                 logger.info(f"Attente de la création du fichier {config.GENERATION_ZIP_PATH}...")
                 time.sleep(5)
+            logger.info(f"Fichier {config.GENERATION_ZIP_PATH} généré")
         except Exception as e:
             logger.error(f"Erreur lors de l'appel à api.wsp_generate : {e}")
             raise

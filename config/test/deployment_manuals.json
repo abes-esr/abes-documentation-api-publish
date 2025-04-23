@@ -4,5 +4,12 @@
   "ManuelItem": "aideitem/",
   "ManuelExportsDemande": "aideformexport/",
   "ManuelBacon": "aidebacon/",
+  "ManuelColodus": "aidecolodus/",
+  "ManuelExportsDemande": "aideformexport/",
+  "ManuelQualiMarc": "aidequalimarc/",
+  "ManuelRetro": "aideretro/",
+  "ManuelSciencePlus": "aidescienceplusabes/",
+  "ManuelSelfSudoc": "aideselfsudoc/",
+  "ManuelsThesesFR": "aidethesesfr/",
   "ManuelBaconEN": "aidebacon/EN/"
 }

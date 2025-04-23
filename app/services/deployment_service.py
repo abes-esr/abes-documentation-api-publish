@@ -38,28 +38,35 @@ FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])
 
 def deploy_manuals(manuals):
     logger.info(f"Deploying manuals: {manuals}")
+    results = []
 
     for manual_enum in manuals:
         if isinstance(manual_enum, str):
             manual = manual_enum
         else:
             manual = manual_enum.value
+        try:
+            if manual not in SCENARI_MANUALS_MAP.keys():
+                logger.info(f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
+                raise HTTPException(status_code=404,
+                                    detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
 
-        if manual not in SCENARI_MANUALS_MAP.keys():
-            logger.info(f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
-            raise HTTPException(status_code=404,
-                                detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
+            if manual not in DEPLOYMENT_MANUALS_MAP.keys():
+                logger.info(f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
+                raise HTTPException(status_code=404,
+                                    detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
-        if manual not in DEPLOYMENT_MANUALS_MAP.keys():
-            logger.info(f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
-            raise HTTPException(status_code=404,
-                                detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
+            purge_directory(manual)
+            generate_manual(SCENARI_MANUALS_MAP[manual])
+            unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
 
-        purge_directory(manual)
-        generate_manual(SCENARI_MANUALS_MAP[manual])
-        unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
-
-    return {"success": True, "message": "Deployment successful"}
+            results.append({"name": manual, "status": "success", "code": 200})
+        except HTTPException as http_e:
+            results.append({"name": manual, "status": "error", "code": http_e.status_code, "details": http_e.detail})
+        except Exception as e:
+            logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
+            results.append({"name": manual, "status": "error", "code": 500, "detail": str(e)})
+    return results
 
 
 def list_manuals():
@@ -68,21 +75,26 @@ def list_manuals():
 
 def deploy_all_manuals():
     logger.info("Deploying all manuals")
-    deploy_manuals(list(DEPLOYMENT_MANUALS_MAP.keys()))
-    return {"success": True, "message": "Deployment successful"}
+    results = deploy_manuals(list(DEPLOYMENT_MANUALS_MAP.keys()))
+    return {"deployments": results}
 
 
 def purge_directory_list(manuals):
     logger.info(f"Purging manuals: {manuals}")
+    results = []
 
     for manual_enum in manuals:
-        if isinstance(manual_enum, str):
-            manual = manual_enum
-        else:
-            manual = manual_enum.value
-        purge_directory(manual)
-
-    return {"success": True, "message": "Purge successful"}
+        try:
+            if isinstance(manual_enum, str):
+                manual = manual_enum
+            else:
+                manual = manual_enum.value
+            purge_directory(manual)
+            results.append({"name": manual, "status": "success", "code": 200})
+        except Exception as e:
+            logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
+            results.append({"name": manual, "status": "error", "code": 500, "detail": str(e)})
+    return results
 
 def purge_directory(manual):
     logger.info(f"Purging manual: {manual}")
@@ -101,8 +113,8 @@ def purge_directory(manual):
             shutil.rmtree(directory_to_delete)
             logger.info(f"Le dossier {directory_to_delete} a été supprimé avec succès.")
         except Exception as e:
-            logger.error(f"Error removing directory {directory_to_delete}: {e}")
-
+            logger.error(f"Erreur lors de la suppression du dossier {directory_to_delete}: {e}")
+            raise RuntimeError(f"Erreur lors de la suppression du dossier {directory_to_delete}: {e}")
     for file in FILES_TO_PURGE:
         file_to_delete = local_path + file
         logger.info(f"Suppression du fichier {file_to_delete}")
@@ -116,9 +128,10 @@ def purge_directory(manual):
             os.remove(file_to_delete)
             logger.info(f"Le fichier {file_to_delete} a été supprimé avec succès.")
         except Exception as e:
-            logger.error(f"Erreur au moment de la suppression du fichier {file_to_delete}: {e}")
+            logger.error(f"Erreur lors de la suppression du fichier {file_to_delete}: {e}")
+            raise RuntimeError(f"Erreur lors de la suppression du fichier {file_to_delete}: {e}")
 
-    return {"success": True, "message": "Purge successful"} # A changer
+    return {"success": True, "message": "Dossier purgé"}
 
 
 def unzip_and_deploy(uri):

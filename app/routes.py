@@ -28,30 +28,24 @@ async def deployer_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...
     """
     Déploie un ou plusieurs manuels en purgeant les fichiers scenari.
     """
-    status = deploy_manuals(manuals)
-    if not status["success"]:
-        raise HTTPException(status_code=500, detail="Erreur de déploiement")
-    return status
+    results = deploy_manuals(manuals)
+    return {"deployments": results}
 
 @router.put("/deploy_all", tags=["Déployer"])
 async def deployer_tous_les_manuels():
     """
     Déploie tous les manuels en purgeant les fichiers scenari.
     """
-    status = deploy_all_manuals()
-    if not status["success"]:
-        raise HTTPException(status_code=500, detail="Erreur de déploiement")
-    return status
+    results = deploy_all_manuals()
+    return {"deployments": results}
 
 @router.delete("/purge", tags=["Purger"])
 async def purger_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
     """
     Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
     """
-    status = purge_directory_list(manuals)
-    if not status["success"]:
-        raise HTTPException(status_code=500, detail="Erreur lors de la suppression du manuel")
-    return status
+    results = purge_directory_list(manuals)
+    return {"purge": results}
 
 def init_routes(app):
     app.include_router(router, prefix="/api")

@@ -12,7 +12,7 @@ logger = logging.getLogger('uvicorn.error')
 # API key headers configuratoin
 API_KEY_NAME = "access_token"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
-API_KEY = config.DEPLOYMENT_API_KEY
+API_KEY = config.API_KEY
 
 async def get_api_key(api_key_header: str = Security(api_key_header)):
     if api_key_header == API_KEY:

@@ -1,14 +1,24 @@
 import logging
 import sys
-
-from fastapi import FastAPI
+from fastapi import FastAPI, Security, Depends, HTTPException
 from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
-from .config import Config
-from .routes import init_routes
+from app.config import config
 from fastapi.middleware.cors import CORSMiddleware
 
 logger = logging.getLogger('uvicorn.error')
+
+# API key headers configuratoin
+API_KEY_NAME = "access_token"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+API_KEY = config.API_KEY
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    if api_key_header == API_KEY:
+        return api_key_header
+    else:
+        raise HTTPException(status_code=403, detail="Erreur d'authentification.")
 
 def create_app():
     app = FastAPI(
@@ -51,5 +61,6 @@ def create_app():
     stream_handler.setFormatter(log_formatter)
     logger.addHandler(stream_handler)
 
+    from .routes import init_routes
     init_routes(app)
     return app

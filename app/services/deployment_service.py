@@ -56,8 +56,11 @@ def deploy_manuals(manuals):
                 raise HTTPException(status_code=404,
                                     detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
-            purge_directory(manual)
+            if not os.path.isdir(config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]):
+                raise FileNotFoundError(f"Le dossier '{config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
+
             generate_manual(SCENARI_MANUALS_MAP[manual])
+            purge_directory(manual)
             unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
 
             results.append({"name": manual, "status": "success", "code": 200})
@@ -136,8 +139,6 @@ def purge_directory(manual):
 
 def unzip_and_deploy(uri):
     try:
-        if not os.path.exists(config.DEPLOYMENT_LOCAL_PATH + uri):
-            os.makedirs(config.DEPLOYMENT_LOCAL_PATH + uri)
         # Dézipper l'archive
         with zipfile.ZipFile(config.GENERATION_ZIP_PATH, 'r') as zip_ref:
             zip_ref.extractall(config.DEPLOYMENT_LOCAL_PATH + uri)

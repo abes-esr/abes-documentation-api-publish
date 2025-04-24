@@ -10,7 +10,7 @@ class Config(BaseSettings):
     GENERATION_SKIN: str
     GENERATION_ZIP_PATH: str
     DEPLOYMENT_LOCAL_PATH: str
-    API_KEY: str
+    DEPLOYMENT_API_KEY: str
 
     class Config:
         env_file = ".env"

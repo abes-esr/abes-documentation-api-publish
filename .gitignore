@@ -4,11 +4,12 @@
 /docker/
 /config/scenari_manuals.json
 /config/deployment_manuals.json
+logs/
 **/__pycache__/
+venv/
 *.pyc
 *.pyo
 *.log
-logs/
 *.pyc
 *.pyo
-venv/
+*.iml

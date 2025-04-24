@@ -2,3 +2,5 @@
 /.env
 /html/*
 /docker/
+/config/scenari_manuals.json
+/config/deployment_manuals.json

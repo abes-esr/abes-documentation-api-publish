@@ -5,6 +5,11 @@
 Cette API permet de générer des manuels depuis un atelier scenari de l'ABES puis de les déployer sur le serveur web http://documentation.abes.fr/ en purgeant le manuel existant. 
 Elle permet d'effectuer des déploiements de masse ou à l'unité.
 
+Les interfaces de l'API sont respectivement disponibles à ces adresses :
+- https://documentation-publication.abes.fr
+- https://documentation-publication-test.abes.fr
+- https://documentation-publication-dev.abes.fr
+
 ## Prérequis
 
 Python 3.11+

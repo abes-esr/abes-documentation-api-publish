@@ -63,12 +63,12 @@ def deploy_manuals(manuals):
             purge_directory(manual)
             unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
 
-            results.append({"name": manual, "status": "success", "code": 200})
+            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
         except HTTPException as http_e:
-            results.append({"name": manual, "status": "error", "code": http_e.status_code, "details": http_e.detail})
+            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": http_e.status_code, "details": http_e.detail})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
-            results.append({"name": manual, "status": "error", "code": 500, "detail": str(e)})
+            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500, "detail": str(e)})
     return results
 
 
@@ -93,10 +93,10 @@ def purge_directory_list(manuals):
             else:
                 manual = manual_enum.value
             purge_directory(manual)
-            results.append({"name": manual, "status": "success", "code": 200})
+            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
-            results.append({"name": manual, "status": "error", "code": 500, "detail": str(e)})
+            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500, "detail": str(e)})
     return results
 
 def purge_directory(manual):

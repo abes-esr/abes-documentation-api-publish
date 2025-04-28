@@ -1,5 +1,6 @@
 import os
-from datetime import datetime, time
+from time import monotonic as timer
+import time
 from app.config import config
 import logging
 import scchainserver_6_3
@@ -25,17 +26,17 @@ class ScenariChainServerPortal:
     def generate(self, pub_uri):
         try:
             if os.path.exists(self.gen_path):
+                logger.info(f"Suppression de {self.gen_path}")
                 os.remove(self.gen_path)
 
-            api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.GENERATION_GENERATOR,
+            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.GENERATION_GENERATOR,
                              props={"skin": config.GENERATION_SKIN}, local_file_path=self.gen_path)
 
             # Vérifier si le fichier est créé avec un timeout
-            timeout = 60  # Temps maximum d'attente en secondes
-            start_time = datetime.now().time()
+            timeout = timer() + 60 * 3600
 
             while not os.path.exists(self.gen_path):
-                if datetime.now().time() - start_time > timeout:
+                if timer() > timeout:
                     logger.error(f"Timeout atteint : le fichier {self.gen_path} n'a pas été créé. [{pub_uri}]")
                     raise TimeoutError(f"Le fichier {self.gen_path} n'a pas été créé dans le délai imparti. [{pub_uri}]")
 

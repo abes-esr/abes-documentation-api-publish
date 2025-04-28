@@ -147,6 +147,7 @@ def unzip_and_deploy(uri):
         os.remove(config.GENERATION_ZIP_PATH)
     except Exception as e:
         logger.error(f"Erreur lors du traitement du fichier : {e}")
+        raise
 
 
 def generate_manual(pub_uri):

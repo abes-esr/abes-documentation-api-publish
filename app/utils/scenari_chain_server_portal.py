@@ -28,12 +28,12 @@ class ScenariChainServerPortal:
             if os.path.exists(self.gen_path):
                 logger.info(f"Suppression de {self.gen_path}")
                 os.remove(self.gen_path)
-            # Attention la fonction wsp_generate ne lève pas d'erreur mais log seulement les erreurs
+            # Warning function wsp_generate does not raise exceptions but logs errors though
             data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.GENERATION_GENERATOR,
                              props={"skin": config.GENERATION_SKIN}, local_file_path=self.gen_path)
 
-            # Vérifier si le fichier est créé avec un timeout
-            timeoutSet = 10
+            # timeout checks creation of file
+            timeoutSet = 15 # seconds
             timeout = timer() + timeoutSet
 
             while not os.path.exists(self.gen_path):

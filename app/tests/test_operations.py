@@ -29,3 +29,58 @@ class TestOperations(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+import unittest
+from unittest.mock import patch, mock_open
+import json
+import os
+
+# Importer les fonctions à tester
+from your_module import load_json_config, extract_paths
+
+class TestConfigLoading(unittest.TestCase):
+
+    def setUp(self):
+        # Définir un fichier JSON mock
+        self.mock_json_data = {
+            "ManuelPeriscope": {
+                "cheminScenari": "/ManuelPeriscopeV2/0-Structure/ManuelPeriscope.pub",
+                "cheminDeploiement": "aideperiscope/"
+            },
+            "ManuelLicencesNationales": {
+                "cheminScenari": "/ManuelLicencesNationales/0-Structure/ManuelLicencesNationales.pub",
+                "cheminDeploiement": "aidelicencesnationales/"
+            }
+        }
+
+    @patch("builtins.open", new_callable=mock_open, read_data=json.dumps(mock_json_data))
+    def test_load_json_config(self, mock_file):
+        # Chemin fictif pour le test
+        file_path = 'fake_path/configuration_noms_chemins_manuels.json'
+
+        # Appeler la fonction à tester
+        result = load_json_config(file_path)
+
+        # Vérifier que le résultat correspond au JSON mock
+        self.assertEqual(result, self.mock_json_data)
+
+    def test_extract_paths(self):
+        # Utiliser le JSON mock pour tester extract_paths
+        scenari_map = extract_paths(self.mock_json_data, "cheminScenari")
+        deployment_map = extract_paths(self.mock_json_data, "cheminDeploiement")
+
+        # Vérifier que les chemins sont correctement extraits
+        expected_scenari_map = {
+            "ManuelPeriscope": "/ManuelPeriscopeV2/0-Structure/ManuelPeriscope.pub",
+            "ManuelLicencesNationales": "/ManuelLicencesNationales/0-Structure/ManuelLicencesNationales.pub"
+        }
+        expected_deployment_map = {
+            "ManuelPeriscope": "aideperiscope/",
+            "ManuelLicencesNationales": "aidelicencesnationales/"
+        }
+
+        self.assertEqual(scenari_map, expected_scenari_map)
+        self.assertEqual(deployment_map, expected_deployment_map)
+
+if __name__ == '__main__':
+    unittest.main()

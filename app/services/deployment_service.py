@@ -1,29 +1,11 @@
 from fastapi import HTTPException
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
+from ..utils.misc import load_json_config, extract_paths
 from app.config import config
-import json
 import logging
 import zipfile
 import shutil
 import os
-
-
-def load_json_config(file_path):
-    # Loads a JSON file and returns the corresponding map
-    try:
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    except Exception as e:
-        logger.error(f"Erreur lors du chargement du fichier {file_path}: {e}")
-        return {}
-
-
-def extract_paths(config_data, key_name):
-    # Excracts paths for a given key and returns a map
-    extracted_map = {}
-    for manual, paths in config_data.items():
-        extracted_map[manual] = paths.get(key_name, "")
-    return extracted_map
 
 
 def deploy_manuals(manuals):
@@ -46,9 +28,9 @@ def deploy_manuals(manuals):
                 raise HTTPException(status_code=404,
                                     detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
-            if not os.path.isdir(config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]):
+            if not os.path.isdir(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]):
                 raise FileNotFoundError(
-                    f"Le dossier '{config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
+                    f"Le dossier '{config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
 
             generate_manual(SCENARI_MANUALS_MAP[manual])
             purge_directory(manual)
@@ -98,7 +80,7 @@ def purge_directory_list(manuals):
 def purge_directory(manual):
     logger.info(f"Purging manual: {manual}")
 
-    local_path = config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]
+    local_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]
     for directory in DIRECTORIES_TO_PURGE:
         directory_to_delete = local_path + directory
         logger.info(f"Suppression du dossier {directory_to_delete}")
@@ -136,11 +118,11 @@ def purge_directory(manual):
 def unzip_and_deploy(uri):
     try:
         # Dézipper l'archive
-        with zipfile.ZipFile(config.GENERATION_ZIP_PATH, 'r') as zip_ref:
-            zip_ref.extractall(config.DEPLOYMENT_LOCAL_PATH + uri)
-            logger.info(f"Fichier décompressé dans : {config.DEPLOYMENT_LOCAL_PATH + uri}")
+        with zipfile.ZipFile(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, 'r') as zip_ref:
+            zip_ref.extractall(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri)
+            logger.info(f"Fichier décompressé dans : {config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri}")
         # Supprimer
-        os.remove(config.GENERATION_ZIP_PATH)
+        os.remove(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH)
     except Exception as e:
         logger.error(f"Erreur lors du traitement du fichier : {e}")
         raise

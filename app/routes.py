@@ -6,23 +6,18 @@ from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals,  \
     load_json_config, config_directory, purge_directory_list
+from .utils.misc import load_json_config, extract_paths
+
 
 router = APIRouter()
 
-DEPLOYMENT_MANUALS_MAP = load_json_config(os.path.join(config_directory, 'deployment_manuals.json'))
+config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
+DEPLOYMENT_MANUALS_MAP = extract_paths(config_data, "cheminDeploiement")
 ManualEnum = Enum('ManualEnum', {key: key for key in DEPLOYMENT_MANUALS_MAP.keys()})
 
 class Manual(BaseModel):
     name: str
     name: ManualEnum
-
-@router.get("/liste", tags=["Lister"])
-async def lister_les_manuels_disponibles_dans_l_API():
-    """
-    Donne la liste de tous les manuels de la base de données de l'API
-    """
-    return list_manuals()
-
 
 @router.put("/deploy", tags=["Déployer"], dependencies=[Depends(get_api_key)])
 async def deployer_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
@@ -47,6 +42,13 @@ async def purger_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...))
     """
     results = purge_directory_list(manuals)
     return {"purge": results}
+
+@router.get("/liste", tags=["Lister"])
+async def lister_les_manuels_disponibles_dans_l_API():
+    """
+    Donne la liste de tous les manuels de la base de données de l'API
+    """
+    return list_manuals()
 
 def init_routes(app):
     app.include_router(router, prefix="/api")

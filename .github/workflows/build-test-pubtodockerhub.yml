@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
       - name: "Build: build docker image"
         run: |
-          docker build --build-arg GENERATION_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t localimage:latest
+          docker build --build-arg DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t localimage:latest
 
       - name: "Push: prepare version from git tags/branchs"
         id: docker_tag_meta
@@ -43,6 +43,6 @@ jobs:
           for DOCKER_TAG in $DOCKER_TAGS
           do
             # publication de l'image pour le front
-            docker build --build-arg GENERATION_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t ${DOCKER_TAG}-documentation-api-publish
+            docker build --build-arg DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t ${DOCKER_TAG}-documentation-api-publish
             docker push ${DOCKER_TAG}-documentation-api-publish
           done

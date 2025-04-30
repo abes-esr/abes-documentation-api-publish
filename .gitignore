@@ -3,7 +3,7 @@
 /html/*
 /docker/
 /config/scenari_manuals.json
-/config/deployment_manuals.json
+/config/configuration_noms_chemins_manuels.json
 logs/
 **/__pycache__/
 venv/

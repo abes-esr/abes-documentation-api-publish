@@ -11,13 +11,14 @@ logger = logging.getLogger('uvicorn.error')
 
 
 class ScenariChainServerPortal:
-    def __init__(self):
+    def __init__(self, workshop_title):
         try:
             self.server = scchainserver_6_3.portal.new_portal(
                 override_props={"user": config.DOCUMENTATION_API_PUBLISH_USER, "password": config.DOCUMENTATION_API_PUBLISH_PASSWORD})
             logger.info(f"Connexion au serveur scenari effectuée : {self.server}")
-            self.wsp_code = api.search_wsp_code(self.server, title_fragment=config.DOCUMENTATION_API_PUBLISH_WORKSHOP)
-            logger.info(f"Code de l'atelier {config.DOCUMENTATION_API_PUBLISH_WORKSHOP} : {self.wsp_code}")
+            logger.info(f"Recherche de l'atelier : {workshop_title}")
+            self.wsp_code = api.search_wsp_code(self.server, title_fragment=workshop_title)
+            logger.info(f"Code de l'atelier {workshop_title} : {self.wsp_code}")
             self.gen_path = config.DOCUMENTATION_API_PUBLISH_ZIP_PATH
         except Exception as e:
             logger.error(f"Erreur lors de l'appel au serveur scchainserver_6_3 : {e}")

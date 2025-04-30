@@ -20,38 +20,52 @@ class Manual(BaseModel):
     name: str
     name: ManualEnum
 
+####################################################################
 # 1 tag per workshop
+# routes are defined in functions so their attributes are fixed
 for workshop, title in config_workshops_list.items():
-    @router.put(f"/deploy/{workshop}", tags=[title], dependencies=[Depends(get_api_key)])
-    async def deployer_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
-        """
-        Déploie un ou plusieurs manuels en purgeant les fichiers scenari.
-        """
-        results = deploy_manuals(manuals)
-        return {"deployments": results}
+    def create_deploy_manuals_route(workshop: str, title: str):
+        @router.put(f"/deploy/{workshop}", tags=[title], dependencies=[Depends(get_api_key)])
+        async def deployer_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
+            """
+            Déploie un ou plusieurs manuels en purgeant les fichiers scenari.
+            """
+            results = deploy_manuals(manuals, title)
+            return {"deployments": results}
 
-    @router.put(f"/deploy_all/{workshop}", tags=[title], dependencies=[Depends(get_api_key)])
-    async def deployer_tous_les_manuels():
-        """
-        Déploie tous les manuels en purgeant les fichiers scenari.
-        """
-        results = deploy_all_manuals()
-        return {"deployments": results}
+    create_deploy_manuals_route(workshop, title)
 
-    @router.delete(f"/purge/{workshop}", tags=[title], dependencies=[Depends(get_api_key)])
-    async def purger_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
-        """
-        Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
-        """
-        results = purge_directory_list(manuals)
-        return {"purge": results}
+    def create_deploy_all_manuals(workshop: str, title: str):
+        @router.put(f"/deploy_all/{workshop}", tags=[title], dependencies=[Depends(get_api_key)])
+        async def deployer_tous_les_manuels():
+            """
+            Déploie tous les manuels en purgeant les fichiers scenari.
+            """
+            results = deploy_all_manuals()
+            return {"deployments": results}
 
-    @router.get(f"/liste/{workshop}", tags=[title])
-    async def lister_les_manuels_disponibles_dans_l_API():
-        """
-        Donne la liste de tous les manuels de la base de données de l'API
-        """
-        return list_manuals()
+    create_deploy_all_manuals(workshop, title)
+
+    def create_delete_manuals(workshop: str, title: str):
+        @router.delete(f"/purge/{workshop}", tags=[title], dependencies=[Depends(get_api_key)])
+        async def purger_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
+            """
+            Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
+            """
+            results = purge_directory_list(manuals)
+            return {"purge": results}
+
+    create_delete_manuals(workshop, title)
+
+    def create_get_list(workshop: str, title: str):
+        @router.get(f"/list /{workshop}", tags=[title])
+        async def lister_les_manuels_disponibles_dans_l_API():
+            """
+            Donne la liste de tous les manuels de la base de données de l'API
+            """
+            return list_manuals()
+
+    create_get_list(workshop, title)
 
 def init_routes(app):
     app.include_router(router, prefix="/api")

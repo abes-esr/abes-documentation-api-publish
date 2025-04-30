@@ -8,8 +8,8 @@ import shutil
 import os
 
 
-def deploy_manuals(manuals):
-    logger.info(f"Deploying manuals: {manuals}")
+def deploy_manuals(manuals, workshop_title):
+    logger.info(f"From {workshop_title}, deploying manuals: {manuals}")
     results = []
 
     for manual_enum in manuals:
@@ -32,7 +32,7 @@ def deploy_manuals(manuals):
                 raise FileNotFoundError(
                     f"Le dossier '{config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
 
-            generate_manual(SCENARI_MANUALS_MAP[manual])
+            generate_manual(SCENARI_MANUALS_MAP[manual], workshop_title)
             purge_directory(manual)
             unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
 
@@ -128,8 +128,8 @@ def unzip_and_deploy(uri):
         raise
 
 
-def generate_manual(pub_uri):
-    scenari_portal = ScenariChainServerPortal()
+def generate_manual(pub_uri, workshop_title):
+    scenari_portal = ScenariChainServerPortal(workshop_title)
     scenari_portal.generate(pub_uri)
 
 

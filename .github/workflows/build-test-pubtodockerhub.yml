@@ -4,7 +4,7 @@ name: "build-test-pubtodockerhub"
 # de votre application soient pousées sur dockerhub
 # dans le repository ayant ce nom
 # exemple, si vous indiquez : abesesr/theses
-#   alors l'image sera poussée sur https://hub.docker.com/r/abesesr/theses
+#   alors l'image sera poussée sur https://hub.docker.com/r/abesesr/documentation
 env:
   DOCKERHUB_IMAGE_PREFIX: abesesr/documentation
 
@@ -13,7 +13,15 @@ on:
     paths-ignore:
       - '**.md'
       - '.github/**'
+    branches:
+      - main
+      - test
+      - develop
   pull_request:
+    branches:
+      - main
+      - test
+      - develop
   workflow_dispatch:
 
 jobs:

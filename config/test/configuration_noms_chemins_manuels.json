@@ -1,0 +1,62 @@
+{
+  "ManuelPeriscope": {
+    "cheminScenari": "/ManuelPeriscopeV2/0-Structure/ManuelPeriscope.pub",
+    "cheminDeploiement": "aideperiscope/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelLicencesNationales": {
+    "cheminScenari": "/ManuelLicencesNationales/0-Structure/ManuelLicencesNationales.pub",
+    "cheminDeploiement": "aidelicencesnationales/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelItem": {
+    "cheminScenari": "/ManuelItem/0-Structure/item.pub",
+    "cheminDeploiement": "aideitem/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelExportsDemande": {
+    "cheminScenari": "/ManuelExportsDemande/0-Structure/FormExport.pub",
+    "cheminDeploiement": "aideformexport/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelBacon": {
+    "cheminScenari": "/ManuelsBacon/VersionFrancaise/0-PageStructure/ManuelBacon.pub",
+    "cheminDeploiement": "aidebacon/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelColodus": {
+    "cheminScenari": "/ManuelColodus/1-Publication/ManuelColodus.pub",
+    "cheminDeploiement": "aidecolodus/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelQualiMarc": {
+    "cheminScenari": "/ManuelQualiMarc/0-Structure/QualiMarc.pub",
+    "cheminDeploiement": "aidequalimarc/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelRetro": {
+    "cheminScenari": "/ManuelRetro/0-Structure/AideSignalementRetrospectif.pub",
+    "cheminDeploiement": "aideretro/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelSciencePlus": {
+    "cheminScenari": "/ManuelSciencePlus/0-PagesStructure/scienceplusabes.pub",
+    "cheminDeploiement": "aidescienceplusabes/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelSelfSudoc": {
+    "cheminScenari": "/ManuelSelfSudoc/0-Structure/SelfSudoc.pub",
+    "cheminDeploiement": "aideselfsudoc/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelsThesesFR": {
+    "cheminScenari": "/ManuelsTheses/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+    "cheminDeploiement": "aidethesesfr/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  },
+  "ManuelBaconEN": {
+    "cheminScenari": "/ManuelsBacon/VersionAnglaise/0-PageStructure/HandbookBacon.pub",
+    "cheminDeploiement": "aidebacon/E,N/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  }
+}

@@ -14,11 +14,11 @@ class ScenariChainServerPortal:
     def __init__(self):
         try:
             self.server = scchainserver_6_3.portal.new_portal(
-                override_props={"user": config.GENERATION_USER, "password": config.GENERATION_PASSWORD})
+                override_props={"user": config.DOCUMENTATION_API_PUBLISH_USER, "password": config.DOCUMENTATION_API_PUBLISH_PASSWORD})
             logger.info(f"Connexion au serveur scenari effectuée : {self.server}")
-            self.wsp_code = api.search_wsp_code(self.server, title_fragment=config.GENERATION_WORKSHOP)
-            logger.info(f"Code de l'atelier {config.GENERATION_WORKSHOP} : {self.wsp_code}")
-            self.gen_path = config.GENERATION_ZIP_PATH
+            self.wsp_code = api.search_wsp_code(self.server, title_fragment=config.DOCUMENTATION_API_PUBLISH_WORKSHOP)
+            logger.info(f"Code de l'atelier {config.DOCUMENTATION_API_PUBLISH_WORKSHOP} : {self.wsp_code}")
+            self.gen_path = config.DOCUMENTATION_API_PUBLISH_ZIP_PATH
         except Exception as e:
             logger.error(f"Erreur lors de l'appel au serveur scchainserver_6_3 : {e}")
             raise
@@ -28,21 +28,22 @@ class ScenariChainServerPortal:
             if os.path.exists(self.gen_path):
                 logger.info(f"Suppression de {self.gen_path}")
                 os.remove(self.gen_path)
+            # Warning function wsp_generate does not raise exceptions but logs errors though
+            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.DOCUMENTATION_API_PUBLISH_GENERATOR,
+                             props={"skin": config.DOCUMENTATION_API_PUBLISH_SKIN}, local_file_path=self.gen_path)
 
-            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.GENERATION_GENERATOR,
-                             props={"skin": config.GENERATION_SKIN}, local_file_path=self.gen_path)
-
-            # Vérifier si le fichier est créé avec un timeout
-            timeout = timer() + 60 * 3600
+            # timeout checks creation of file
+            timeoutSet = 15 # seconds
+            timeout = timer() + timeoutSet
 
             while not os.path.exists(self.gen_path):
                 if timer() > timeout:
-                    logger.error(f"Timeout atteint : le fichier {self.gen_path} n'a pas été créé. [{pub_uri}]")
-                    raise TimeoutError(f"Le fichier {self.gen_path} n'a pas été créé dans le délai imparti. [{pub_uri}]")
+                    logger.error(f"Erreur dans la génération de [{pub_uri}]")
+                    raise TimeoutError(f"Erreur dans la génération de [{pub_uri}]")
 
-                logger.info(f"Attente de la création du fichier {config.GENERATION_ZIP_PATH}...")
+                logger.info(f"Attente de la création du fichier {config.DOCUMENTATION_API_PUBLISH_ZIP_PATH}...")
                 time.sleep(5)
-            logger.info(f"Fichier {config.GENERATION_ZIP_PATH} généré")
+            logger.info(f"Fichier {config.DOCUMENTATION_API_PUBLISH_ZIP_PATH} généré")
         except Exception as e:
             logger.error(f"Erreur lors de l'appel à api.wsp_generate : {e}")
             raise

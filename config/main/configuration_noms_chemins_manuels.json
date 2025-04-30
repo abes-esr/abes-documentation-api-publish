@@ -1,0 +1,7 @@
+{
+  "manuel": {
+    "cheminScenari": "/.pub",
+    "cheminDeploiement": "aidepe/",
+    "cheminSauvegarde": "/Departements/DSR/..."
+  }
+}

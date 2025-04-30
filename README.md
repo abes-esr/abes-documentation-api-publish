@@ -40,7 +40,7 @@ uvicorn app.main\:app --host 0.0.0.0 --port 8000 --reload
 ## Créer l'image docker
 Passer le nom de l'environnement en argument (develop|test|main)
 ```Bash
-docker build --build-arg GENERATION_SCENARI_API_FOLDER=develop -t abes-documentation-api-publish .
+docker build --build-arg DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER=develop -t abes-documentation-api-publish .
 ```
 
 ## Accéder à l'API

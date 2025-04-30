@@ -1,39 +1,11 @@
 from fastapi import HTTPException
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
+from ..utils.misc import load_json_config, extract_paths
 from app.config import config
-import json
 import logging
 import zipfile
 import shutil
 import os
-
-logger = logging.getLogger('uvicorn.error')
-
-
-def load_json_config(file_path):
-    """
-    Charge un fichier JSON et retourne le dictionnaire correspondant.
-
-    :param file_path: Chemin du fichier JSON à charger.
-    :return: Dictionnaire contenant les mappages.
-    """
-    try:
-        with open(file_path, 'r') as file:
-            return json.load(file)
-    except Exception as e:
-        logger.error(f"Erreur lors du chargement du fichier {file_path}: {e}")
-        return {}
-
-
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-config_directory = os.path.join(project_root, 'config')
-# Charger les mappages à partir des fichiers JSON
-DEPLOYMENT_MANUALS_MAP = load_json_config(os.path.join(config_directory, 'deployment_manuals.json'))
-SCENARI_MANUALS_MAP = load_json_config(os.path.join(config_directory, 'scenari_manuals.json'))
-# Charger la liste des répertoires et fichiers à purger
-items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))
-DIRECTORIES_TO_PURGE = items_to_purge_config.get("directories_to_purge", [])
-FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])
 
 
 def deploy_manuals(manuals):
@@ -56,19 +28,23 @@ def deploy_manuals(manuals):
                 raise HTTPException(status_code=404,
                                     detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
-            if not os.path.isdir(config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]):
-                raise FileNotFoundError(f"Le dossier '{config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
+            if not os.path.isdir(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]):
+                raise FileNotFoundError(
+                    f"Le dossier '{config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
 
             generate_manual(SCENARI_MANUALS_MAP[manual])
             purge_directory(manual)
             unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
 
-            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
+            results.append({"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
         except HTTPException as http_e:
-            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": http_e.status_code, "details": http_e.detail})
+            results.append(
+                {"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": http_e.status_code,
+                 "details": http_e.detail})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
-            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500, "detail": str(e)})
+            results.append({"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500,
+                            "detail": str(e)})
     return results
 
 
@@ -93,16 +69,18 @@ def purge_directory_list(manuals):
             else:
                 manual = manual_enum.value
             purge_directory(manual)
-            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
+            results.append({"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
-            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500, "detail": str(e)})
+            results.append({"name": manual, "path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500,
+                            "detail": str(e)})
     return results
+
 
 def purge_directory(manual):
     logger.info(f"Purging manual: {manual}")
 
-    local_path = config.DEPLOYMENT_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]
+    local_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]
     for directory in DIRECTORIES_TO_PURGE:
         directory_to_delete = local_path + directory
         logger.info(f"Suppression du dossier {directory_to_delete}")
@@ -140,11 +118,11 @@ def purge_directory(manual):
 def unzip_and_deploy(uri):
     try:
         # Dézipper l'archive
-        with zipfile.ZipFile(config.GENERATION_ZIP_PATH, 'r') as zip_ref:
-            zip_ref.extractall(config.DEPLOYMENT_LOCAL_PATH + uri)
-            logger.info(f"Fichier décompressé dans : {config.DEPLOYMENT_LOCAL_PATH + uri}")
+        with zipfile.ZipFile(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, 'r') as zip_ref:
+            zip_ref.extractall(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri)
+            logger.info(f"Fichier décompressé dans : {config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri}")
         # Supprimer
-        os.remove(config.GENERATION_ZIP_PATH)
+        os.remove(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH)
     except Exception as e:
         logger.error(f"Erreur lors du traitement du fichier : {e}")
         raise
@@ -153,3 +131,18 @@ def unzip_and_deploy(uri):
 def generate_manual(pub_uri):
     scenari_portal = ScenariChainServerPortal()
     scenari_portal.generate(pub_uri)
+
+
+logger = logging.getLogger('uvicorn.error')
+
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+config_directory = os.path.join(project_root, 'config')
+# load maps from JSON config file
+config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
+SCENARI_MANUALS_MAP = extract_paths(config_data, "cheminScenari")
+DEPLOYMENT_MANUALS_MAP = extract_paths(config_data, "cheminDeploiement")
+
+# load files and directories names to purge
+items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))
+DIRECTORIES_TO_PURGE = items_to_purge_config.get("directories_to_purge", [])
+FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])

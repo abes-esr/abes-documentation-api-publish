@@ -1,62 +1,86 @@
-{
-  "ManuelPeriscope": {
-    "cheminScenari": "/ManuelPeriscopeV2/0-Structure/ManuelPeriscope.pub",
-    "cheminDeploiement": "aideperiscope/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+[
+  {
+    "name": "Guide Doctorant",
+    "cheminScenari": "/GuideDoctorant/00-PagesStructure/AideThesesDoctorant.pub",
+    "cheminDeploiement": "aidetheses/doctorant/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
   },
-  "ManuelLicencesNationales": {
-    "cheminScenari": "/ManuelLicencesNationales/0-Structure/ManuelLicencesNationales.pub",
-    "cheminDeploiement": "aidelicencesnationales/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Guide Doctorant",
+    "cheminScenari": "/GuideDoctorant/00-PagesStructure/AideThesesDoctorant.pub",
+    "cheminDeploiement": "aidetheses/doctorant/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
   },
-  "ManuelItem": {
-    "cheminScenari": "/ManuelItem/0-Structure/item.pub",
-    "cheminDeploiement": "aideitem/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Guide Doctorant",
+    "cheminScenari": "/GuideDoctorant/00-PagesStructure/AideThesesDoctorant.pub",
+    "cheminDeploiement": "aidetheses/doctorant/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
   },
-  "ManuelExportsDemande": {
-    "cheminScenari": "/ManuelExportsDemande/0-Structure/FormExport.pub",
-    "cheminDeploiement": "aideformexport/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Recommandations TEF",
+    "cheminScenari": "/RecommandationTef/_Publication/TEF.pub",
+    "cheminDeploiement": "docinternes/TEF/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
   },
-  "ManuelBacon": {
-    "cheminScenari": "/ManuelsBacon/VersionFrancaise/0-PageStructure/ManuelBacon.pub",
-    "cheminDeploiement": "aidebacon/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Recommandations TEF",
+    "cheminScenari": "/RecommandationTef/_Publication/TEF.pub",
+    "cheminDeploiement": "docinternes/TEF/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
   },
-  "ManuelColodus": {
-    "cheminScenari": "/ManuelColodus/1-Publication/ManuelColodus.pub",
-    "cheminDeploiement": "aidecolodus/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Recommandations TEF",
+    "cheminScenari": "/RecommandationTef/_Publication/TEF.pub",
+    "cheminDeploiement": "docinternes/TEF/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
   },
-  "ManuelQualiMarc": {
-    "cheminScenari": "/ManuelQualiMarc/0-Structure/QualiMarc.pub",
-    "cheminDeploiement": "aidequalimarc/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Star Et Step",
+    "cheminScenari": "/StarEtStep/0-PagesStructure/AideThesesPro.pub",
+    "cheminDeploiement": "aidetheses/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
   },
-  "ManuelRetro": {
-    "cheminScenari": "/ManuelRetro/0-Structure/AideSignalementRetrospectif.pub",
-    "cheminDeploiement": "aideretro/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Star Et Step",
+    "cheminScenari": "/StarEtStep/0-PagesStructure/AideThesesPro.pub",
+    "cheminDeploiement": "aidetheses/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
   },
-  "ManuelSciencePlus": {
-    "cheminScenari": "/ManuelSciencePlus/0-PagesStructure/scienceplusabes.pub",
-    "cheminDeploiement": "aidescienceplusabes/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "Star Et Step",
+    "cheminScenari": "/StarEtStep/0-PagesStructure/AideThesesPro.pub",
+    "cheminDeploiement": "aidetheses/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
   },
-  "ManuelSelfSudoc": {
-    "cheminScenari": "/ManuelSelfSudoc/0-Structure/SelfSudoc.pub",
-    "cheminDeploiement": "aideselfsudoc/",
-    "cheminSauvegarde": "/Departements/DSR/..."
-  },
-  "ManuelsThesesFR": {
-    "cheminScenari": "/ManuelsTheses/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+  {
+    "name": "ThesesFR",
+    "cheminScenari": "/ThesesFR/00-PagesStructure/AideThesesfr.pub",
     "cheminDeploiement": "aidethesesfr/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
   },
-  "ManuelBaconEN": {
-    "cheminScenari": "/ManuelsBacon/VersionAnglaise/0-PageStructure/HandbookBacon.pub",
-    "cheminDeploiement": "aidebacon/E,N/",
-    "cheminSauvegarde": "/Departements/DSR/..."
+  {
+    "name": "ThesesFR",
+    "cheminScenari": "/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+    "cheminDeploiement": "aidethesesfr/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
+  },
+  {
+    "name": "ThesesFR",
+    "cheminScenari": "/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+    "cheminDeploiement": "aidethesesfr/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
   }
-}
+]

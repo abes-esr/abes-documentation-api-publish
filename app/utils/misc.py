@@ -42,9 +42,6 @@ def create_workshop_list(config_data):
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
         config_file = os.path.join(project_root, 'config', 'scenari_ateliers.json')
 
-        if os.path.exists(config_file):
-            os.remove(config_file)
-
         # Extract unique values of "atelier"
         unique_workshops = {entry["atelier"] for entry in config_data}
         sorted_workshops = sorted(unique_workshops)

@@ -44,7 +44,7 @@ for workshop, workshop_title in config_workshops_list.items():
             """
             Déploie tous les manuels en purgeant les fichiers scenari.
             """
-            results = deploy_all_manuals()
+            results = deploy_all_manuals(workshop_title)
             return {"deployments": results}
 
     create_deploy_all_manuals(workshop, workshop_title)
@@ -55,7 +55,7 @@ for workshop, workshop_title in config_workshops_list.items():
             """
             Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
             """
-            results = purge_directory_list(manuals)
+            results = purge_directory_list(manuals, workshop_title)
             return {"purge": results}
 
     create_delete_manuals(workshop, workshop_title)
@@ -66,7 +66,7 @@ for workshop, workshop_title in config_workshops_list.items():
             """
             Donne la liste de tous les manuels de la base de données de l'API
             """
-            return list_manuals()
+            return list_manuals(workshop_title)
 
     create_get_list(workshop, workshop_title)
 

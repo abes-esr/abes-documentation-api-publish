@@ -42,7 +42,9 @@ def create_app():
     )
 
     # Setting a custom swagger html page ; custom css is passed into swagger-ui.css between modifAbes comments ; keep css through updates
-    @app.get("/api/v1", include_in_schema=False)
+    # @app.get("/docs", include_in_schema=False)
+    #
+    @app.get("/docs", include_in_schema=False)
     async def custom_swagger_ui_html():
         return get_swagger_ui_html(
             openapi_url=app.openapi_url,
@@ -51,6 +53,18 @@ def create_app():
             swagger_css_url="/static/swagger-ui.css",
             swagger_js_url="/static/swagger-ui-bundle.js"
         )
+    #########################################################################################################################################
+    # Setting a custom swagger html page ; custom css is passed into swagger-ui.css between modifAbes comments ; keep css through updates
+    # @app.get("/api/v1", include_in_schema=False)
+    # @app.get("/api/v1", include_in_schema=False)
+    # async def custom_swagger_ui_html():
+    #     return get_swagger_ui_html(
+    #         openapi_url=app.openapi_url,
+    #         title=app.title,
+    #         oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
+    #         swagger_css_url="/static/swagger-ui.css",
+    #         swagger_js_url="/static/swagger-ui-bundle.js"
+    #     )
 
     # Custom css file import
     app.mount("/static", StaticFiles(directory="static"), name="static")

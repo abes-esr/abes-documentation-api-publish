@@ -18,6 +18,8 @@ def deploy_manuals(manuals, workshop_title):
         else:
             manual = manual_enum.value
         try:
+            SCENARI_MANUALS_MAP = scenari_manuals_array[workshop_title]
+            DEPLOYMENT_MANUALS_MAP = scenary_deployment_array[workshop_title]
             if manual not in SCENARI_MANUALS_MAP.keys():
                 logger.info(f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
                 raise HTTPException(status_code=404,
@@ -33,34 +35,38 @@ def deploy_manuals(manuals, workshop_title):
                     f"Le dossier '{config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]}' n'existe pas.")
 
             generate_manual(SCENARI_MANUALS_MAP[manual], workshop_title)
-            purge_directory(manual)
+            purge_directory(manual, workshop_title)
             unzip_and_deploy(DEPLOYMENT_MANUALS_MAP[manual])
 
-            results.append({"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
+            results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
         except HTTPException as http_e:
             results.append(
-                {"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": http_e.status_code,
+                {"name": manual, "workshop": workshop_title, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": http_e.status_code,
                  "details": http_e.detail})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
-            results.append({"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500,
+            results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "error", "code": 500,
                             "detail": str(e)})
     return results
 
 
-def list_manuals():
+def list_manuals(workshop_title):
+    DEPLOYMENT_MANUALS_MAP = scenary_deployment_array[workshop_title]
     return list(DEPLOYMENT_MANUALS_MAP.keys())
 
 
-def deploy_all_manuals():
+def deploy_all_manuals(workshop_title):
+    DEPLOYMENT_MANUALS_MAP = scenary_deployment_array[workshop_title]
     logger.info("Deploying all manuals")
-    results = deploy_manuals(list(DEPLOYMENT_MANUALS_MAP.keys()))
+    results = deploy_manuals(list(DEPLOYMENT_MANUALS_MAP.keys()), workshop_title)
     return {"deployments": results}
 
 
-def purge_directory_list(manuals):
+def purge_directory_list(manuals, workshop_title):
     logger.info(f"Purging manuals: {manuals}")
     results = []
+    SCENARI_MANUALS_MAP = scenari_manuals_array[workshop_title]
+    DEPLOYMENT_MANUALS_MAP = scenary_deployment_array[workshop_title]
 
     for manual_enum in manuals:
         try:
@@ -68,7 +74,7 @@ def purge_directory_list(manuals):
                 manual = manual_enum
             else:
                 manual = manual_enum.value
-            purge_directory(manual)
+            purge_directory(manual, workshop_title)
             results.append({"name": manual, "scenari_pub_path": SCENARI_MANUALS_MAP[manual], "deployment_path": DEPLOYMENT_MANUALS_MAP[manual], "status": "success", "code": 200})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
@@ -77,8 +83,9 @@ def purge_directory_list(manuals):
     return results
 
 
-def purge_directory(manual):
+def purge_directory(manual, workshop_title):
     logger.info(f"Purging manual: {manual}")
+    DEPLOYMENT_MANUALS_MAP = scenary_deployment_array[workshop_title]
 
     local_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + DEPLOYMENT_MANUALS_MAP[manual]
     for directory in DIRECTORIES_TO_PURGE:
@@ -137,10 +144,17 @@ logger = logging.getLogger('uvicorn.error')
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 config_directory = os.path.join(project_root, 'config')
-# load maps from JSON config file
+
+config_workshops_list = load_json_config(os.path.join(config_directory, 'scenari_ateliers.json'))
 config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
-SCENARI_MANUALS_MAP = extract_paths(config_data, "cheminScenari")
-DEPLOYMENT_MANUALS_MAP = extract_paths(config_data, "cheminDeploiement")
+
+scenari_manuals_array = {}
+scenary_deployment_array = {}
+
+for workshop, workshop_title in config_workshops_list.items():
+    # load maps from JSON config file
+    scenari_manuals_array[workshop_title] = extract_paths(config_data, "cheminScenari", "atelier", workshop_title)
+    scenary_deployment_array[workshop_title] = extract_paths(config_data, "cheminDeploiement", "atelier", workshop_title)
 
 # load files and directories names to purge
 items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))

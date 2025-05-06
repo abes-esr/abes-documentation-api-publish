@@ -1,3 +1,4 @@
+import os
 import socket
 import logging
 import json
@@ -22,9 +23,38 @@ def load_json_config(file_path):
         return {}
 
 
-def extract_paths(config_data, key_name):
+def extract_paths(config_data, key_name, where_clause_key=None, where_clause_value=None):
     # Extracts paths for a given key and returns a map
+    # if where_clause_key and where_clause_value are used, filters the config file on these values
     extracted_map = {}
-    for manual, paths in config_data.items():
-        extracted_map[manual] = paths.get(key_name, "")
+    for entry in config_data:
+        name = entry.get("name")
+        paths = entry
+        if where_clause_key is not None and where_clause_value is not None:
+            if paths.get(where_clause_key) == where_clause_value:
+                extracted_map[name] = paths.get(key_name, "")
+        else:
+            extracted_map[name] = paths.get(key_name, "")
     return extracted_map
+
+def create_workshop_list(config_data):
+    try:
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+        config_file = os.path.join(project_root, 'config', 'scenari_ateliers.json')
+
+        if os.path.exists(config_file):
+            os.remove(config_file)
+
+        # Extract unique values of "atelier"
+        unique_workshops = {entry["atelier"] for entry in config_data}
+        sorted_workshops = sorted(unique_workshops)
+        workshops_map = {f"atelier{i+1}": workshop for i, workshop in enumerate(sorted_workshops)}
+
+        with open(config_file, 'w', encoding='utf-8') as json_file:
+            json.dump(workshops_map, json_file, ensure_ascii=False, indent=4)
+
+        logger.info(f"Le fichier {config_file} a été créé.")
+    except Exception as e:
+        logger.error(e)
+
+

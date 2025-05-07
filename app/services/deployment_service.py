@@ -1,6 +1,6 @@
 from fastapi import HTTPException
+from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
-from ..utils.misc import load_json_config, extract_paths
 from app.config import config
 import logging
 import zipfile
@@ -144,22 +144,3 @@ def generate_manual(pub_uri, workshop_title):
 
 
 logger = logging.getLogger('uvicorn.error')
-
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-config_directory = os.path.join(project_root, 'config')
-
-config_workshops_list = load_json_config(os.path.join(config_directory, 'scenari_ateliers.json'))
-config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
-
-SCENARI_MANUALS_ARRAY = {}
-SCENARI_DEPLOYMENT_ARRAY = {}
-
-for workshop, workshop_title in config_workshops_list.items():
-    # load maps from JSON config file
-    SCENARI_MANUALS_ARRAY[workshop_title] = extract_paths(config_data, "cheminScenari", "atelier", workshop_title)
-    SCENARI_DEPLOYMENT_ARRAY[workshop_title] = extract_paths(config_data, "cheminDeploiement", "atelier", workshop_title)
-
-# load files and directories names to purge
-items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))
-DIRECTORIES_TO_PURGE = items_to_purge_config.get("directories_to_purge", [])
-FILES_TO_PURGE = items_to_purge_config.get("files_to_purge", [])

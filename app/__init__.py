@@ -1,11 +1,13 @@
 import logging
 import sys
-from fastapi import FastAPI, Security, Depends, HTTPException
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Security, HTTPException
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.security import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from app.config import config
 from fastapi.middleware.cors import CORSMiddleware
+from app.load_config import load_configuration_files
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -20,8 +22,19 @@ async def get_api_key(api_key_header: str = Security(api_key_header)):
     else:
         raise HTTPException(status_code=403, detail="Erreur d'authentification.")
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load manuals configuration files
+    # Launch order at startup
+    load_configuration_files()
+    from .routes import init_routes
+    init_routes(app)
+    yield
+
+
 def create_app():
     app = FastAPI(
+        lifespan=lifespan,
         title="API de publication des manuels de l'ABES",
         docs_url=None,
         redoc_url=None,
@@ -56,7 +69,6 @@ def create_app():
     #########################################################################################################################################
     # Setting a custom swagger html page ; custom css is passed into swagger-ui.css between modifAbes comments ; keep css through updates
     # @app.get("/api/v1", include_in_schema=False)
-    # @app.get("/api/v1", include_in_schema=False)
     # async def custom_swagger_ui_html():
     #     return get_swagger_ui_html(
     #         openapi_url=app.openapi_url,
@@ -65,6 +77,7 @@ def create_app():
     #         swagger_css_url="/static/swagger-ui.css",
     #         swagger_js_url="/static/swagger-ui-bundle.js"
     #     )
+
 
     # Custom css file import
     app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -75,6 +88,4 @@ def create_app():
     stream_handler.setFormatter(log_formatter)
     logger.addHandler(stream_handler)
 
-    from .routes import init_routes
-    init_routes(app)
     return app

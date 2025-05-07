@@ -1,26 +1,19 @@
-import os
 from enum import Enum
-from fastapi import APIRouter, Depends
 from .__init__ import get_api_key
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Query, Depends
 from pydantic import BaseModel
-from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, \
-    load_json_config, config_directory, purge_directory_list
-from .utils.misc import load_json_config, extract_paths, create_workshop_list
+
+from .load_config import CONFIG_WORKSHOPS_LIST, SCENARI_DEPLOYMENT_ARRAY
+from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory_list
 
 router = APIRouter()
-
-config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
-create_workshop_list(config_data)
-config_workshops_list = load_json_config(os.path.join(config_directory, 'scenari_ateliers.json'))
-
 
 ####################################################################
 # 1 tag per workshop
 # routes are defined in methods so their attributes are fixed
-for workshop, workshop_title in config_workshops_list.items():
-    DEPLOYMENT_MANUALS_MAP = extract_paths(config_data, "cheminDeploiement", "atelier", workshop_title)
-    ManualEnum = Enum(f'ManualEnum_{workshop}', {str(key): str(key) for key in DEPLOYMENT_MANUALS_MAP.keys()})
+for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
+    deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
+    ManualEnum = Enum(f'ManualEnum_{workshop}', {str(key): str(key) for key in deployment_manuals_map.keys()})
 
 
     class Manual(BaseModel):

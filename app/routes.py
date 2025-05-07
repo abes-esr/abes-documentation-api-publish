@@ -77,7 +77,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 ####################################################################
 # Get the list of workshops
 #
-@router.get(f"/list/workshops/", tags=["Ateliers disponibles"])
+@router.get(f"/list/workshops", tags=["Ateliers disponibles"])
 async def lister_les_ateliers_disponibles_dans_l_API():
     """
     Donne la liste de tous les ateliers et du nom de la route correspondante

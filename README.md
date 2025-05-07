@@ -50,14 +50,14 @@ L'API sera accessible à l'adresse http://localhost:8000. Vous pouvez interagir 
 Accédez à http://localhost:8000/docs pour interagir avec l'API via l'interface Swagger.
 
 ## Endpoints
-**GET /list** : Liste des manuels disponibles dans l'atelier.
+**GET /list/{workshop_key}** : Liste des manuels disponibles dans l'atelier.
 
-**PUT /deploy** : Déclenche la génération d'un ou plusieurs manuels.<br>
+**PUT /deploy/{workshop_key}** : Déclenche la génération d'un ou plusieurs manuels.<br>
 Exemple : /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
 
-**PUT /deploy_all** : Déclenche la génération de tous les manuels de l'atelier.
+**PUT /deploy_all/{workshop_key}** : Déclenche la génération de tous les manuels de l'atelier.
 
-**PUT /purge** : Supprime les dossiers et fichiers web générés par scenari (ne supprime pas les ressources de formation).<br>
+**PUT /purge/{workshop_key}** : Supprime les dossiers et fichiers web générés par scenari (ne supprime pas les ressources de formation).<br>
 Exemple : /purge/atelier2?manuals=ManuelPeriscope&manuals=ManuelLicencesNationales&manuals=ManuelItem
 
 **GET /list/workshops** : Liste des ateliers disponibles et du nom de la clé à utiliser dans la route de l'atelier.

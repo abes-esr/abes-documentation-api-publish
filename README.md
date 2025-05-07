@@ -6,9 +6,9 @@ Cette API permet de générer des manuels depuis un atelier scenari de l'ABES pu
 Elle permet d'effectuer des déploiements de masse ou à l'unité. Elle construit la liste des manuels selon les données du fichier config/configuration_noms_chemins_manuels.json
 
 Les interfaces de l'API sont respectivement disponibles à ces adresses :
-- https://documentation-publication.abes.fr
-- https://documentation-publication-test.abes.fr
-- https://documentation-publication-dev.abes.fr
+- https://documentation.abes.fr/api/v1/
+- https://documentation-test.abes.fr/api/v1/
+- https://documentation-dev.abes.fr/api/v1/
 
 ## Prérequis
 

@@ -9,17 +9,18 @@ import os
 
 
 def deploy_manuals(manuals, workshop_title):
-    logger.info(f"Déploiement du manuel {manuals} de l'atelier {workshop_title}")
     results = []
 
     scenari_manuals_map = SCENARI_MANUALS_ARRAY[workshop_title]
-    deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
+    deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
 
     for manual_enum in manuals:
         if isinstance(manual_enum, str):
             manual = manual_enum
         else:
             manual = manual_enum.value
+
+        logger.info(f"Déploiement du manuel {manual} de l'atelier {workshop_title}")
 
         try:
             if manual not in scenari_manuals_map.keys():
@@ -53,12 +54,12 @@ def deploy_manuals(manuals, workshop_title):
 
 
 def list_manuals(workshop_title):
-    deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
+    deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
     return list(deployment_manuals_map.keys())
 
 
 def deploy_all_manuals(workshop_title):
-    deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
+    deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
     logger.info("Deploying all manuals")
     results = deploy_manuals(list(deployment_manuals_map.keys()), workshop_title)
     return {"deployments": results}
@@ -68,7 +69,7 @@ def purge_directory_list(manuals, workshop_title):
     logger.info(f"Purging manuals: {manuals}")
     results = []
     scenari_manuals_map = SCENARI_MANUALS_ARRAY[workshop_title]
-    deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
+    deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
 
     for manual_enum in manuals:
         try:
@@ -87,7 +88,7 @@ def purge_directory_list(manuals, workshop_title):
 
 def purge_directory(manual, workshop_title):
     logger.info(f"Purging manual: {manual}")
-    deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
+    deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
 
     local_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]
     for directory in DIRECTORIES_TO_PURGE:
@@ -151,12 +152,12 @@ config_workshops_list = load_json_config(os.path.join(config_directory, 'scenari
 config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
 
 SCENARI_MANUALS_ARRAY = {}
-SCENARY_DEPLOYMENT_ARRAY = {}
+SCENARI_DEPLOYMENT_ARRAY = {}
 
 for workshop, workshop_title in config_workshops_list.items():
     # load maps from JSON config file
     SCENARI_MANUALS_ARRAY[workshop_title] = extract_paths(config_data, "cheminScenari", "atelier", workshop_title)
-    SCENARY_DEPLOYMENT_ARRAY[workshop_title] = extract_paths(config_data, "cheminDeploiement", "atelier", workshop_title)
+    SCENARI_DEPLOYMENT_ARRAY[workshop_title] = extract_paths(config_data, "cheminDeploiement", "atelier", workshop_title)
 
 # load files and directories names to purge
 items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))

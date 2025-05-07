@@ -61,7 +61,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_get_list(workshop: str, workshop_title: str):
-        @router.get(f"/list /{workshop}", tags=[workshop_title])
+        @router.get(f"/list/{workshop}", tags=[workshop_title])
         async def lister_les_manuels_disponibles_dans_l_API():
             """
             Donne la liste de tous les manuels de la base de données de l'API

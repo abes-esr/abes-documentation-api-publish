@@ -3,7 +3,7 @@
 
 
 Cette API permet de générer des manuels depuis un atelier scenari de l'ABES puis de les déployer sur le serveur web http://documentation.abes.fr/ en purgeant le manuel existant. 
-Elle permet d'effectuer des déploiements de masse ou à l'unité.
+Elle permet d'effectuer des déploiements de masse ou à l'unité. Elle construit la liste des manuels selon les données du fichier config/configuration_noms_chemins_manuels.json
 
 Les interfaces de l'API sont respectivement disponibles à ces adresses :
 - https://documentation-publication.abes.fr
@@ -50,12 +50,14 @@ L'API sera accessible à l'adresse http://localhost:8000. Vous pouvez interagir 
 Accédez à http://localhost:8000/docs pour interagir avec l'API via l'interface Swagger.
 
 ## Endpoints
-**GET /list** : Liste des manuels disponibles.
+**GET /list** : Liste des manuels disponibles dans l'atelier.
 
 **PUT /deploy** : Déclenche la génération d'un ou plusieurs manuels.<br>
-Exemple : /deploy?manuals=manuelBacon&manuals=manuelItem
+Exemple : /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
 
-**PUT /deploy_all** : Déclenche la génération de tous les manuels.
+**PUT /deploy_all** : Déclenche la génération de tous les manuels de l'atelier.
 
 **PUT /purge** : Supprime les dossiers et fichiers web générés par scenari (ne supprime pas les ressources de formation).<br>
-Exemple : /purge?manuals=ManuelPeriscope&manuals=ManuelLicencesNationales&manuals=ManuelItem
+Exemple : /purge/atelier2?manuals=ManuelPeriscope&manuals=ManuelLicencesNationales&manuals=ManuelItem
+
+**GET /list/workshops** : Liste des ateliers disponibles et du nom de la clé à utiliser dans la route de l'atelier.

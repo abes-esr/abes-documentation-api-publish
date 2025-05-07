@@ -12,14 +12,16 @@ def deploy_manuals(manuals, workshop_title):
     logger.info(f"Déploiement du manuel {manuals} de l'atelier {workshop_title}")
     results = []
 
+    scenari_manuals_map = SCENARI_MANUALS_ARRAY[workshop_title]
+    deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
+
     for manual_enum in manuals:
         if isinstance(manual_enum, str):
             manual = manual_enum
         else:
             manual = manual_enum.value
+
         try:
-            scenari_manuals_map = SCENARI_MANUALS_ARRAY[workshop_title]
-            deployment_manuals_map = SCENARY_DEPLOYMENT_ARRAY[workshop_title]
             if manual not in scenari_manuals_map.keys():
                 logger.info(f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers de génération scenari")
                 raise HTTPException(status_code=404,

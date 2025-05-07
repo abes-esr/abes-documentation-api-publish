@@ -13,7 +13,7 @@ router = APIRouter()
 # routes are defined in methods so their attributes are fixed
 for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
-    ManualEnum = Enum(f'ManualEnum_{workshop}', {str(key): str(key) for key in deployment_manuals_map.keys()})
+    ManualEnum = Enum(f'ManualEnum_{workshop}', {str(key): str(key) for key in sorted(deployment_manuals_map.keys())})
 
 
     class Manual(BaseModel):

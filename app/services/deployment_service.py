@@ -55,7 +55,7 @@ def deploy_manuals(manuals, workshop_title):
 
 def list_manuals(workshop_title):
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
-    return list(deployment_manuals_map.keys())
+    return sorted(list(deployment_manuals_map.keys()))
 
 
 def deploy_all_manuals(workshop_title):

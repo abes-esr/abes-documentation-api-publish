@@ -1,5 +1,6 @@
 from fastapi import HTTPException
-from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE
+from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, \
+    CONFIG_WORKSHOPS_LIST
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
 from app.config import config
 import logging
@@ -57,6 +58,8 @@ def list_manuals(workshop_title):
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
     return sorted(list(deployment_manuals_map.keys()))
 
+def list_workshops():
+    return CONFIG_WORKSHOPS_LIST
 
 def deploy_all_manuals(workshop_title):
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]

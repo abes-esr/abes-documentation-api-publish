@@ -4,9 +4,11 @@ from fastapi import APIRouter, Query, Depends
 from pydantic import BaseModel
 
 from .load_config import CONFIG_WORKSHOPS_LIST, SCENARI_DEPLOYMENT_ARRAY
-from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory_list
+from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory_list, \
+    list_workshops
 
 router = APIRouter()
+
 
 ####################################################################
 # 1 tag per workshop
@@ -70,6 +72,17 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     create_get_list(workshop, workshop_title)
+
+
+####################################################################
+# Get the list of workshops
+#
+@router.get(f"/list/workshops/", tags=["Ateliers disponibles"])
+async def lister_les_ateliers_disponibles_dans_l_API():
+    """
+    Donne la liste de tous les ateliers et du nom de la route correspondante
+    """
+    return list_workshops()
 
 
 def init_routes(app):

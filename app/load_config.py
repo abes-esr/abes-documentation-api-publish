@@ -5,6 +5,7 @@ SCENARI_MANUALS_ARRAY = {}
 SCENARI_DEPLOYMENT_ARRAY = {}
 DIRECTORIES_TO_PURGE = []
 FILES_TO_PURGE = []
+CONFIG_DATA = {}
 CONFIG_WORKSHOPS_LIST = {}
 
 def load_configuration_files():
@@ -12,14 +13,13 @@ def load_configuration_files():
 
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     config_directory = os.path.join(project_root, 'config')
-    config_data = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
-
-    create_workshop_list(config_data)
+    CONFIG_DATA = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
+    create_workshop_list(CONFIG_DATA)
     CONFIG_WORKSHOPS_LIST = load_json_config(os.path.join(config_directory, 'scenari_ateliers.json'))
 
     for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
-        SCENARI_MANUALS_ARRAY[workshop_title] = extract_paths(config_data, "cheminScenari", "atelier", workshop_title)
-        SCENARI_DEPLOYMENT_ARRAY[workshop_title] = extract_paths(config_data, "cheminDeploiement", "atelier", workshop_title)
+        SCENARI_MANUALS_ARRAY[workshop_title] = extract_paths(CONFIG_DATA, "cheminScenari", "atelier", workshop_title)
+        SCENARI_DEPLOYMENT_ARRAY[workshop_title] = extract_paths(CONFIG_DATA, "cheminDeploiement", "atelier", workshop_title)
 
     items_to_purge_config = load_json_config(os.path.join(config_directory, 'items_to_purge.json'))
     DIRECTORIES_TO_PURGE = items_to_purge_config.get("directories_to_purge", [])

@@ -7,15 +7,18 @@ DIRECTORIES_TO_PURGE = []
 FILES_TO_PURGE = []
 CONFIG_DATA = {}
 CONFIG_WORKSHOPS_LIST = {}
+CONFIG_WORKSHOPS_ERROR_LIST = {}
+
 
 def load_configuration_files():
-    global SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, CONFIG_WORKSHOPS_LIST
+    global SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST
 
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     config_directory = os.path.join(project_root, 'config')
     CONFIG_DATA = load_json_config(os.path.join(config_directory, 'configuration_noms_chemins_manuels.json'))
     create_workshop_list(CONFIG_DATA)
     CONFIG_WORKSHOPS_LIST = load_json_config(os.path.join(config_directory, 'scenari_ateliers.json'))
+    CONFIG_WORKSHOPS_ERROR_LIST = load_json_config(os.path.join(config_directory, 'scenari_ateliers_erreurs.json'))
 
     for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
         SCENARI_MANUALS_ARRAY[workshop_title] = extract_paths(CONFIG_DATA, "cheminScenari", "atelier", workshop_title)

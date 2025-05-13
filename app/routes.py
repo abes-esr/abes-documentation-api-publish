@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from .load_config import CONFIG_WORKSHOPS_LIST, SCENARI_DEPLOYMENT_ARRAY
 from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory_list, \
-    list_workshops
+    list_workshops, list_errors
 
 router = APIRouter()
 
@@ -83,6 +83,17 @@ async def lister_les_ateliers_disponibles_dans_l_API():
     Donne la liste de tous les ateliers et du nom de la route correspondante
     """
     return list_workshops()
+
+
+####################################################################
+# Get the list of configuration file loading errors
+#
+@router.get(f"/list/errors", tags=["Ateliers disponibles"])
+async def lister_les_erreurs_au_chargement_du_fichier_de_configuration():
+    """
+    Donne la liste des erreurs rencontrées lors du chargement du fichier de configuration configuration_noms_chemins_manuels.json
+    """
+    return list_errors()
 
 
 def init_routes(app):

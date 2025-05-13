@@ -1,8 +1,9 @@
+import hashlib
 import os
 import socket
 import logging
 import json
-
+from typing import re
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -54,4 +55,36 @@ def create_workshop_list(config_data):
     except Exception as e:
         logger.error(e)
 
+def calculate_file_checksum(zip_path):
+    """Calculate the SHA-256 checksum of a ZIP file."""
+    sha256 = hashlib.sha256()
+    with open(zip_path, 'rb') as f:
+        while chunk := f.read(8192):
+            sha256.update(chunk)
+    return sha256.hexdigest()
 
+
+def is_file_in_list(target_file_path, file_list):
+    """Check if the target file has the same checksum as any file in the list."""
+    target_checksum = calculate_file_checksum(target_file_path)
+
+    for file_path in file_list:
+        if calculate_file_checksum(file_path) == target_checksum:
+            return True
+
+    return False
+
+
+def find_files(partial_name, directory_path):
+    """Find files in the directory that match the partial name, ignoring the date in the filename."""
+    # Regex pattern to match the partial name with any date format
+    pattern = re.compile(r'.*' + re.escape(partial_name) + r'.*')
+
+    matching_files = []
+    # List all files in the directory
+    for file_name in os.listdir(directory_path):
+        file_path = os.path.join(directory_path, file_name)
+        if os.path.isfile(file_path) and pattern.match(file_name):
+            matching_files.append(file_name)
+
+    return matching_files

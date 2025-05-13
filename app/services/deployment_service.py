@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, \
     CONFIG_WORKSHOPS_LIST
+from ..utils.misc import find_files, is_file_in_list
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
 from app.config import config
 import logging
@@ -40,6 +41,7 @@ def deploy_manuals(manuals, workshop_title):
 
             generate_manual(scenari_manuals_map[manual], workshop_title)
             purge_directory(manual, workshop_title)
+            create_backup_file()
             unzip_and_deploy(deployment_manuals_map[manual])
 
             results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "success", "code": 200})
@@ -144,6 +146,25 @@ def unzip_and_deploy(uri):
 def generate_manual(pub_uri, workshop_title):
     scenari_portal = ScenariChainServerPortal(workshop_title)
     scenari_portal.generate(pub_uri)
+
+
+def create_backup_file(file_name):
+    try:
+        # Se connecter au serveur
+
+        # Récupérer la liste des fichiers de sauvegarde
+        directory_path = "/" # Config env var ?
+        previous_manuals_list = find_files(file_name, directory_path)
+        # Vérifier les hash des fichiers (checksum)
+        if is_file_in_list(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, previous_manuals_list):
+            return False
+
+        # Si différent alors on le sauvegarde dans le dossier "/Departements/DSR/_Pole_Formation_Documentation/Manuels/BackUpAutomatique"
+
+        return True
+    except Exception as e:
+        logger.error(f"Erreur lors de l'archivage du manuel : {e}")
+        raise
 
 
 logger = logging.getLogger('uvicorn.error')

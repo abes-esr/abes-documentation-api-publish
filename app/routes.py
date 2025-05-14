@@ -97,4 +97,4 @@ async def lister_les_erreurs_au_chargement_du_fichier_de_configuration():
 
 
 def init_routes(app):
-    app.include_router(router, prefix="/api")
+    app.include_router(router, prefix="/api/v1")

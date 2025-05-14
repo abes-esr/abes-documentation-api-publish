@@ -1,4 +1,5 @@
 import os
+import shutil
 import socket
 import logging
 import json
@@ -78,3 +79,15 @@ def create_workshop_list(config_data):
         logger.info(f"Le fichier {error_file} a été créé.")
     except Exception as e:
         logger.error(e)
+
+
+
+def copy_file_to_directory(source_file, destination_directory):
+    try:
+        os.makedirs(destination_directory, exist_ok=True)
+
+        shutil.copy(source_file, destination_directory)
+
+        logger.info(f"Fichier {source_file} copié vers {destination_directory}")
+    except Exception as e:
+        logger.info(f"Erreur lors de la copie du fichier : {e}")

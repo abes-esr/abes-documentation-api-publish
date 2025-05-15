@@ -57,7 +57,7 @@ def create_workshop_list(config_data):
             try:
                 scenari_portal = ScenariChainServerPortal(workshop)
                 wsp_code = scenari_portal.wsp_code
-
+                del scenari_portal
                 if isinstance(wsp_code, str):
                     workshops_map[f"atelier{i}"] = workshop
                     i += 1

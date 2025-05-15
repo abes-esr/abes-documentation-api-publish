@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from .load_config import CONFIG_WORKSHOPS_LIST, SCENARI_DEPLOYMENT_ARRAY
 from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory_list, \
-    list_workshops, list_errors
+    list_workshops, list_errors, check_workshop_name
 
 router = APIRouter()
 
@@ -25,11 +25,14 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
     def create_deploy_manuals_route(workshop: str, workshop_title: str):
         @router.put(f"/deploy/{workshop}", tags=[workshop_title], dependencies=[Depends(get_api_key)])
-        async def deployer_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
+        async def deployer_un_ou_plusieurs_manuels(
+                save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur"),
+                manuals: list[ManualEnum] = Query(...)
+        ):
             """
             Déploie un ou plusieurs manuels en purgeant les fichiers scenari.
             """
-            results = deploy_manuals(manuals, workshop_title)
+            results = deploy_manuals(manuals, workshop_title, save)
             return {"deployments": results}
 
 
@@ -38,11 +41,13 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
     def create_deploy_all_manuals(workshop: str, workshop_title: str):
         @router.put(f"/deploy_all/{workshop}", tags=[workshop_title], dependencies=[Depends(get_api_key)])
-        async def deployer_tous_les_manuels():
+        async def deployer_tous_les_manuels(
+                save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur")
+        ):
             """
             Déploie tous les manuels en purgeant les fichiers scenari.
             """
-            results = deploy_all_manuals(workshop_title)
+            results = deploy_all_manuals(workshop_title, save)
             return {"deployments": results}
 
 
@@ -94,6 +99,13 @@ async def lister_les_erreurs_au_chargement_du_fichier_de_configuration():
     Donne la liste des erreurs rencontrées lors du chargement du fichier de configuration configuration_noms_chemins_manuels.json
     """
     return list_errors()
+
+@router.get(f"/check-workshop-name", tags=["Ateliers disponibles"])
+async def verifier_la_validite_du_nom_d_atelier(wsp_name: str = Query()):
+    """
+    Donne la liste des erreurs rencontrées lors du chargement du fichier de configuration configuration_noms_chemins_manuels.json
+    """
+    return check_workshop_name(wsp_name)
 
 
 def init_routes(app):

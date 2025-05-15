@@ -9,8 +9,11 @@ import shutil
 import os
 
 
-def deploy_manuals(manuals, workshop_title):
+def deploy_manuals(manuals, workshop_title, save):
     results = []
+
+    if not save:
+        save = False
 
     scenari_manuals_map = SCENARI_MANUALS_ARRAY[workshop_title]
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
@@ -41,6 +44,9 @@ def deploy_manuals(manuals, workshop_title):
             generate_manual(scenari_manuals_map[manual], workshop_title)
             purge_directory(manual, workshop_title)
             unzip_and_deploy(deployment_manuals_map[manual])
+            if save:
+                backup_manual()
+            remove_zip()
 
             results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "success", "code": 200})
         except HTTPException as http_e:
@@ -64,10 +70,10 @@ def list_workshops():
 def list_errors():
     return CONFIG_WORKSHOPS_ERROR_LIST
 
-def deploy_all_manuals(workshop_title):
+def deploy_all_manuals(workshop_title, save):
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
     logger.info("Deploying all manuals")
-    results = deploy_manuals(list(deployment_manuals_map.keys()), workshop_title)
+    results = deploy_manuals(list(deployment_manuals_map.keys()), workshop_title, save)
     return {"deployments": results}
 
 
@@ -137,7 +143,17 @@ def unzip_and_deploy(uri):
         with zipfile.ZipFile(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, 'r') as zip_ref:
             zip_ref.extractall(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri)
             logger.info(f"Fichier décompressé dans : {config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri}")
-        # Supprimer
+    except Exception as e:
+        logger.error(f"Erreur lors du traitement du fichier : {e}")
+        raise
+
+
+def backup_manual():
+    pass
+
+
+def remove_zip():
+    try:
         os.remove(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH)
     except Exception as e:
         logger.error(f"Erreur lors du traitement du fichier : {e}")
@@ -147,6 +163,17 @@ def unzip_and_deploy(uri):
 def generate_manual(pub_uri, workshop_title):
     scenari_portal = ScenariChainServerPortal(workshop_title)
     scenari_portal.generate(pub_uri)
+    del scenari_portal
+
+
+def check_workshop_name(workshop_name: str):
+    scenari_portal = ScenariChainServerPortal(workshop_name)
+    wsp_code = scenari_portal.wsp_code
+    del scenari_portal
+    if wsp_code:
+        return wsp_code
+    else:
+        return f"L'API n'a pas trouvé l'atelier recherché : '{workshop_name}'"
 
 
 logger = logging.getLogger('uvicorn.error')

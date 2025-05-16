@@ -5,7 +5,7 @@ import logging
 import json
 
 from app.utils.scenari_chain_server_portal import ScenariChainServerPortal
-from typing import re
+import re
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -101,10 +101,10 @@ def is_file_in_list(target_file_path, file_list):
     return False
 
 
-def find_files(partial_name, directory_path):
+def find_files(zip_file_name, directory_path):
     """Find files in the directory that match the partial name, ignoring the date in the filename."""
-    # Regex pattern to match the partial name with any date format
-    pattern = re.compile(r'.*' + re.escape(partial_name) + r'.*')
+    # Regex pattern to match the partial nasme with any date format
+    pattern = re.compile(r'.*' + re.escape(zip_file_name) + r'.*')
 
     matching_files = []
     # List all files in the directory

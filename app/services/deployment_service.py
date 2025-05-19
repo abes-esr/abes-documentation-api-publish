@@ -160,14 +160,6 @@ def backup_manual(manual_name):
         new_file_name = kebab_case_name + formatted_time + '.zip'
         new_file_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH + new_file_name
 
-        previous_manuals_list = find_files(kebab_case_name, config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH)
-        logger.info(previous_manuals_list)
-        # Vérifier les hash des fichiers (checksum)
-        if is_file_in_list(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, previous_manuals_list):
-            logger.info(f"une copie de {new_file_name} existe déjà")
-        else:
-            logger.info(f"Pas de copie de {new_file_name} trouvée") #TODO
-
         os.makedirs(os.path.dirname(new_file_path), exist_ok=True)
         shutil.copy2(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, new_file_path)
         logger.info(f"Sauvegarde réussie : {new_file_path}")
@@ -203,25 +195,6 @@ def check_workshop_name(workshop_name: str):
         return wsp_code
     else:
         return f"L'API n'a pas trouvé l'atelier recherché : '{workshop_name}'"
-
-
-def create_backup_file(file_name):
-    try:
-        # Se connecter au serveur
-
-        # Récupérer la liste des fichiers de sauvegarde
-        directory_path = "/" # Config env var ?
-        previous_manuals_list = find_files(file_name, directory_path)
-        # Vérifier les hash des fichiers (checksum)
-        if is_file_in_list(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, previous_manuals_list):
-            return False
-
-        # Si différent alors on le sauvegarde dans le dossier "/Departements/DSR/_Pole_Formation_Documentation/Manuels/BackUpAutomatique"
-
-        return True
-    except Exception as e:
-        logger.error(f"Erreur lors de l'archivage du manuel : {e}")
-        raise
 
 
 logger = logging.getLogger('uvicorn.error')

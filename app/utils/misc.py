@@ -4,6 +4,7 @@ import socket
 import logging
 import json
 
+from app import config
 from app.utils.scenari_chain_server_portal import ScenariChainServerPortal
 import re
 
@@ -95,7 +96,8 @@ def is_file_in_list(target_file_path, file_list):
     target_checksum = calculate_file_checksum(target_file_path)
 
     for file_path in file_list:
-        if calculate_file_checksum(file_path) == target_checksum:
+        file_list_checksum = calculate_file_checksum(config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH + file_path)
+        if file_list_checksum == target_checksum:
             return True
 
     return False

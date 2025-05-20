@@ -40,9 +40,9 @@ def deploy_manuals(manuals, workshop_title, save):
                 raise HTTPException(status_code=404,
                                     detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
-            if not os.path.isdir(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]):
+            if not os.path.isdir(deployment_manuals_map[manual]):
                 raise FileNotFoundError(
-                    f"Le dossier '{config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]}' n'existe pas.")
+                    f"Le dossier '{deployment_manuals_map[manual]}' n'existe pas.")
 
             generate_manual(scenari_manuals_map[manual], workshop_title)
             purge_directory(manual, workshop_title)
@@ -105,7 +105,8 @@ def purge_directory(manual, workshop_title):
     logger.info(f"Purge du manuel: {manual}")
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
 
-    local_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]
+    local_path = deployment_manuals_map[manual]
+
     for directory in DIRECTORIES_TO_PURGE:
         directory_to_delete = local_path + directory
         logger.info(f"Suppression du dossier {directory_to_delete}")
@@ -144,8 +145,8 @@ def unzip_and_deploy(uri):
     try:
         # Dézipper l'archive
         with zipfile.ZipFile(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, 'r') as zip_ref:
-            zip_ref.extractall(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri)
-            logger.info(f"Fichier décompressé dans : {config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri}")
+            zip_ref.extractall(uri)
+            logger.info(f"Fichier décompressé dans : {uri}")
     except Exception as e:
         logger.error(f"Erreur lors du traitement du fichier : {e}")
         raise

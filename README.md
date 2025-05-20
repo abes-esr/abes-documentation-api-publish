@@ -54,7 +54,6 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 ## Endpoints
 
 ### Liste des Manuels Disponibles
-> [!NOTE]
 > **GET /list/{workshop_key}**
 > - **Description** : Récupère la liste des manuels disponibles dans l'atelier spécifié.
 > - **Paramètres** :
@@ -63,7 +62,6 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 >   GET /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
 
 ### Déclencher la Génération de Manuels
-> [!NOTE]
 > **PUT /deploy/{workshop_key}**
 > - **Description** : Déclenche la génération d'un ou plusieurs manuels pour l'atelier spécifié.
 > - **Paramètres** :
@@ -73,7 +71,6 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 >   PUT /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
 
 ### Déclencher la Génération de Tous les Manuels
-> [!NOTE]
 > **PUT /deploy_all/{workshop_key}**
 > - **Description** : Déclenche la génération de tous les manuels de l'atelier spécifié.
 > - **Paramètres** :
@@ -82,7 +79,6 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 >   PUT /deploy_all/atelier1
 
 ### Supprimer les Dossiers et Fichiers Web Générés
-> [!NOTE]
 > **PUT /purge/{workshop_key}**
 > - **Description** : Supprime les dossiers et fichiers web générés par scenari (ne supprime pas les ressources de formation).
 > - **Paramètres** :
@@ -92,21 +88,18 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 >   PUT /purge/atelier2?manuals=ManuelPeriscope&manuals=ManuelLicencesNationales&manuals=ManuelItem
 
 ### Liste des Ateliers Disponibles
-> [!NOTE]
 > **GET /list/workshops**
 > - **Description** : Récupère la liste des ateliers disponibles et du nom de la clé à utiliser dans la route de l'atelier.
 > - **Exemple de Requête** :
 >   GET /list/workshops
 
 ### Liste des Ateliers avec Erreurs
-> [!NOTE]
 > **GET /list/errors**
 > - **Description** : Récupère la liste des noms d'ateliers présents dans le fichier de configuration, pour lesquels l'API a rencontré une erreur en appelant le serveur scenarichain.
 > - **Exemple de Requête** :
 >   GET /list/errors
 
 ### Vérification du Nom de l'Atelier
-> [!NOTE]
 > **GET /list/check-workshop-name**
 > - **Description** : Vérifie si un nom d'atelier est valide ou disponible.
 > - **Paramètres** :

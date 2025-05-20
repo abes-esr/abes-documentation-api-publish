@@ -10,7 +10,7 @@ L'API est disponible à ces adresses :
 - https://documentation-test.abes.fr/api/v1/
 - https://documentation-dev.abes.fr/api/v1/
 
-L'interface utilisateurs quant à elle est ici :
+L'interface utilisateurs est disponible à ces adresses :
 - https://documentation.abes.fr/dashboard/access
 - https://documentation-test.abes.fr/dashboard/access
 - https://documentation-dev.abes.fr/dashboard/access
@@ -67,16 +67,18 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 > - **Paramètres** :
 >     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel générer les manuels.
 >     - `manuals` (string, optionnel) : Le nom des manuels à générer. Peut être spécifié plusieurs fois.
+>     - `save` (string, requis) : à True, l'API sauvegarde une copie du fichier zip de génération dans le dossier html/sauvegardes_automatiques/.
 > - **Exemple de Requête** :
->   PUT /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
+>   PUT /deploy/atelier2?save=true&manuals=manuelBacon&manuals=manuelItem
 
 ### Déclencher la Génération de Tous les Manuels
 > **PUT /deploy_all/{workshop_key}**
 > - **Description** : Déclenche la génération de tous les manuels de l'atelier spécifié.
 > - **Paramètres** :
 >     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel générer tous les manuels.
+>     - `save` (string, requis) : à True, l'API sauvegarde une copie du fichier zip de génération dans le dossier html/sauvegardes_automatiques/.
 > - **Exemple de Requête** :
->   PUT /deploy_all/atelier1
+>   PUT /deploy_all/atelier1?save=false
 
 ### Supprimer les Dossiers et Fichiers Web Générés
 > **PUT /purge/{workshop_key}**

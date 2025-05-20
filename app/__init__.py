@@ -42,10 +42,14 @@ def create_app():
         docs_url=None,
         redoc_url=None,
         swagger_ui_parameters={
-            "syntaxHighlight": {"theme": "agate", "activated": True},
-            "showExtensions": False,
-            "showCommonExtensions": False,
-            "deepLinking": False
+            "swaggerOptions": {
+                "supportedSubmitMethods": [],
+                "syntaxHighlight": {"theme": "agate", "activated": True},
+                "showExtensions": False,
+                "showCommonExtensions": False,
+                "deepLinking": False,
+                "tryItOutEnabled": False
+            }
         }
     )
 

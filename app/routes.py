@@ -24,7 +24,8 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_deploy_manuals_route(workshop: str, workshop_title: str):
-        @router.put(f"/deploy/{workshop}", tags=[workshop_title], dependencies=[Depends(get_api_key)])
+        # @router.put(f"/deploy/{workshop}", tags=[workshop_title], dependencies=[Depends(get_api_key)])
+        @router.put(f"/deploy/{workshop}", tags=[workshop_title])
         async def deployer_un_ou_plusieurs_manuels(
                 save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur"),
                 manuals: list[ManualEnum] = Query(...)
@@ -40,7 +41,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_deploy_all_manuals(workshop: str, workshop_title: str):
-        @router.put(f"/deploy_all/{workshop}", tags=[workshop_title], dependencies=[Depends(get_api_key)])
+        @router.put(f"/deploy_all/{workshop}", tags=[workshop_title])
         async def deployer_tous_les_manuels(
                 save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur")
         ):
@@ -55,7 +56,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_delete_manuals(workshop: str, workshop_title: str):
-        @router.delete(f"/purge/{workshop}", tags=[workshop_title], dependencies=[Depends(get_api_key)])
+        @router.delete(f"/purge/{workshop}", tags=[workshop_title])
         async def purger_un_ou_plusieurs_manuels(manuals: list[ManualEnum] = Query(...)):
             """
             Purge les fichiers scenari des manuels en entrée. Liste des dossiers et fichiers scenari : skin, res, co, lib-md, meta, lib-sc, index.html
@@ -100,7 +101,7 @@ async def lister_les_erreurs_au_chargement_du_fichier_de_configuration():
     """
     return list_errors()
 
-@router.get(f"/check-workshop-name", tags=["Ateliers disponibles"])
+@router.get(f"/check_workshop_name", tags=["Ateliers disponibles"])
 async def verifier_la_validite_du_nom_d_atelier(wsp_name: str = Query()):
     """
     Donne la liste des erreurs rencontrées lors du chargement du fichier de configuration configuration_noms_chemins_manuels.json

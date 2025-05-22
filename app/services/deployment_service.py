@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import HTTPException
 from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, \
     CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST
-from ..utils.misc import find_files, is_file_in_list
+from ..utils.misc import find_files, is_file_in_list, get_formatted_time, write_report
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
 from app.config import config
 import logging
@@ -60,7 +60,10 @@ def deploy_manuals(manuals, workshop_title, save):
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
             results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "error", "code": 500,
                             "detail": str(e)})
-    return sorted(results, key=lambda x: x["code"])
+
+    sorted_results = sorted(results, key=lambda x: x["code"])
+    write_report(sorted_results)
+    return sorted_results
 
 
 def list_manuals(workshop_title):
@@ -154,8 +157,7 @@ def unzip_and_deploy(uri):
 
 def backup_manual(manual_name):
     try:
-        now = datetime.now()
-        formatted_time = now.strftime("_%Y-%m-%d_%H-%M-%S")
+        formatted_time = get_formatted_time()
 
         kebab_case_name = manual_name.lower().replace(' ', '-')
         new_file_name = kebab_case_name + formatted_time + '.zip'

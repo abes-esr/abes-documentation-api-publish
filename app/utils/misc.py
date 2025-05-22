@@ -4,6 +4,7 @@ import shutil
 import socket
 import logging
 import json
+from datetime import datetime
 
 from app import config
 from app.utils.scenari_chain_server_portal import ScenariChainServerPortal
@@ -128,3 +129,29 @@ def copy_file_to_directory(source_file, destination_directory):
         logger.info(f"Fichier {source_file} copié vers {destination_directory}")
     except Exception as e:
         logger.info(f"Erreur lors de la copie du fichier : {e}")
+
+
+def get_formatted_time():
+    now = datetime.now()
+    formatted_time = now.strftime("_%Y-%m-%d_%H-%M-%S")
+    return formatted_time
+
+def write_report(result):
+    file_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH + "rapport-de-publication_" + get_formatted_time() + ".log"
+    with open(file_path, "w", encoding="utf-8") as file:
+        for deployment in result:
+            if 'name' in deployment:
+                file.write(f"Nom: {deployment['name']}\n")
+            if 'workshop' in deployment:
+                file.write(f"Atelier: {deployment['workshop']}\n")
+            if 'scenari_pub_path' in deployment:
+                file.write(f"Chemin de publication Scenari: {deployment['scenari_pub_path']}\n")
+            if 'status' in deployment:
+                file.write(f"Statut: {deployment['status']}\n")
+            if 'code' in deployment:
+                file.write(f"Code: {deployment['code']}\n")
+            if 'detail' in deployment:
+                file.write(f"Détail: {deployment['detail']}\n")
+            file.write("\n")
+
+    logger.info(f"Le rapport a été écrit dans {file_path}")

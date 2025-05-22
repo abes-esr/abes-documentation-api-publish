@@ -60,7 +60,7 @@ def deploy_manuals(manuals, workshop_title, save):
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
             results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "error", "code": 500,
                             "detail": str(e)})
-    return results
+    return sorted(results, key=lambda x: x["code"])
 
 
 def list_manuals(workshop_title):
@@ -77,7 +77,7 @@ def deploy_all_manuals(workshop_title, save):
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
     logger.info("Deploying all manuals")
     results = deploy_manuals(list(deployment_manuals_map.keys()), workshop_title, save)
-    return {"deployments": results}
+    return results
 
 
 def purge_directory_list(manuals, workshop_title):

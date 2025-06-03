@@ -10,10 +10,11 @@ FILES_TO_PURGE = []
 CONFIG_DATA = {}
 CONFIG_WORKSHOPS_LIST = {}
 CONFIG_WORKSHOPS_ERROR_LIST = {}
-
+GENERATOR_TYPES_CONFIG = {}
+GENERATOR_TYPES_LIST = {}
 
 def load_configuration_files():
-    global SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST
+    global SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST, GENERATOR_TYPES_CONFIG, GENERATOR_TYPES_LIST
 
     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
     config_directory = os.path.join(project_root, 'config')
@@ -21,6 +22,8 @@ def load_configuration_files():
     create_workshop_list(CONFIG_DATA)
     CONFIG_WORKSHOPS_LIST = load_json_config(os.path.join(config_directory, 'scenari_ateliers.json'))
     CONFIG_WORKSHOPS_ERROR_LIST = load_json_config(os.path.join(config_directory, 'scenari_ateliers_erreurs.json'))
+    GENERATOR_TYPES_CONFIG = load_json_config(os.path.join(config_directory, 'generator_types_codes.json'))
+    GENERATOR_TYPES_LIST = extract_paths(CONFIG_DATA, "type", "atelier")
 
     for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
         SCENARI_MANUALS_ARRAY[workshop_title] = extract_paths(CONFIG_DATA, "cheminScenari", "atelier", workshop_title)

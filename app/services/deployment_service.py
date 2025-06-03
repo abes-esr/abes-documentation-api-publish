@@ -156,7 +156,7 @@ def backup_manual(manual_name):
         now = datetime.now()
         formatted_time = now.strftime("_%Y-%m-%d_%H-%M-%S")
 
-        kebab_case_name = manual_name.lower().replace(' ', '-')
+        kebab_case_name = manual_name.lower().replace(' - ', '-').replace(' ', '-')
         new_file_name = kebab_case_name + formatted_time + '.zip'
         new_file_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH + new_file_name
 

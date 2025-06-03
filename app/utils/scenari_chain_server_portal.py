@@ -30,7 +30,7 @@ class ScenariChainServerPortal:
                 logger.info(f"Suppression de {self.gen_path}")
                 os.remove(self.gen_path)
             # Warning function wsp_generate does not raise exceptions but logs errors though
-            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=config.DOCUMENTATION_API_PUBLISH_GENERATOR,
+            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack="referenceW",
                              props={"skin": config.DOCUMENTATION_API_PUBLISH_SKIN}, local_file_path=self.gen_path)
 
             # timeout checks creation of file

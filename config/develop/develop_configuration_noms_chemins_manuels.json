@@ -1,0 +1,86 @@
+[
+  {
+    "name": "Guide Doctorant",
+    "cheminScenari": "/GuideDoctorant/00-PagesStructure/AideThesesDoctorant.pub",
+    "cheminDeploiement": "aidetheses/doctorant/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
+  },
+  {
+    "name": "Guide Doctorant",
+    "cheminScenari": "/GuideDoctorant/00-PagesStructure/AideThesesDoctorant.pub",
+    "cheminDeploiement": "aidetheses/doctorant/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
+  },
+  {
+    "name": "Guide Doctorant",
+    "cheminScenari": "/GuideDoctorant/00-PagesStructure/AideThesesDoctorant.pub",
+    "cheminDeploiement": "aidetheses/doctorant/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
+  },
+  {
+    "name": "Recommandations TEF",
+    "cheminScenari": "/RecommandationTef/_Publication/TEF.pub",
+    "cheminDeploiement": "docinternes/TEF/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
+  },
+  {
+    "name": "Recommandations TEF",
+    "cheminScenari": "/RecommandationTef/_Publication/TEF.pub",
+    "cheminDeploiement": "docinternes/TEF/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
+  },
+  {
+    "name": "Recommandations TEF",
+    "cheminScenari": "/RecommandationTef/_Publication/TEF.pub",
+    "cheminDeploiement": "docinternes/TEF/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
+  },
+  {
+    "name": "Star Et Step",
+    "cheminScenari": "/StarEtStep/0-PagesStructure/AideThesesPro.pub",
+    "cheminDeploiement": "aidetheses/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
+  },
+  {
+    "name": "Star Et Step",
+    "cheminScenari": "/StarEtStep/0-PagesStructure/AideThesesPro.pub",
+    "cheminDeploiement": "aidetheses/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
+  },
+  {
+    "name": "Star Et Step",
+    "cheminScenari": "/StarEtStep/0-PagesStructure/AideThesesPro.pub",
+    "cheminDeploiement": "aidetheses/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
+  },
+  {
+    "name": "ThesesFR",
+    "cheminScenari": "/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+    "cheminDeploiement": "aidethesesfr/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses"
+  },
+  {
+    "name": "ThesesFR",
+    "cheminScenari": "/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+    "cheminDeploiement": "aidethesesfr/ES/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Espagnol"
+  },
+  {
+    "name": "ThesesFR",
+    "cheminScenari": "/ThesesFR/00-PagesStructure/AideThesesfr.pub",
+    "cheminDeploiement": "aidethesesfr/EN/",
+    "cheminSauvegarde": "/Departements/DSR/...",
+    "atelier": "ManuelsTheses - Anglais"
+  }
+]

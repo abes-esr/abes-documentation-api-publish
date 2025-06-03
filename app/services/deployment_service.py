@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import HTTPException
 from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, \
     CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST
-from ..utils.misc import find_files, is_file_in_list
+from ..utils.misc import find_files, is_file_in_list, get_formatted_time, write_report
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
 from app.config import config
 import logging
@@ -40,9 +40,9 @@ def deploy_manuals(manuals, workshop_title, save):
                 raise HTTPException(status_code=404,
                                     detail=f"Le manuel \'{manual}\' n'est pas dans la liste des fichiers du serveur de déploiement")
 
-            if not os.path.isdir(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]):
+            if not os.path.isdir(deployment_manuals_map[manual]):
                 raise FileNotFoundError(
-                    f"Le dossier '{config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]}' n'existe pas.")
+                    f"Le dossier '{deployment_manuals_map[manual]}' n'existe pas.")
 
             generate_manual(scenari_manuals_map[manual], workshop_title)
             purge_directory(manual, workshop_title)
@@ -60,7 +60,10 @@ def deploy_manuals(manuals, workshop_title, save):
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
             results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "error", "code": 500,
                             "detail": str(e)})
-    return results
+
+    sorted_results = sorted(results, key=lambda x: x["code"])
+    write_report(sorted_results)
+    return sorted_results
 
 
 def list_manuals(workshop_title):
@@ -77,7 +80,7 @@ def deploy_all_manuals(workshop_title, save):
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
     logger.info("Deploying all manuals")
     results = deploy_manuals(list(deployment_manuals_map.keys()), workshop_title, save)
-    return {"deployments": results}
+    return results
 
 
 def purge_directory_list(manuals, workshop_title):
@@ -105,7 +108,8 @@ def purge_directory(manual, workshop_title):
     logger.info(f"Purge du manuel: {manual}")
     deployment_manuals_map = SCENARI_DEPLOYMENT_ARRAY[workshop_title]
 
-    local_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + deployment_manuals_map[manual]
+    local_path = deployment_manuals_map[manual]
+
     for directory in DIRECTORIES_TO_PURGE:
         directory_to_delete = local_path + directory
         logger.info(f"Suppression du dossier {directory_to_delete}")
@@ -144,8 +148,8 @@ def unzip_and_deploy(uri):
     try:
         # Dézipper l'archive
         with zipfile.ZipFile(config.DOCUMENTATION_API_PUBLISH_ZIP_PATH, 'r') as zip_ref:
-            zip_ref.extractall(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri)
-            logger.info(f"Fichier décompressé dans : {config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH + uri}")
+            zip_ref.extractall(uri)
+            logger.info(f"Fichier décompressé dans : {uri}")
     except Exception as e:
         logger.error(f"Erreur lors du traitement du fichier : {e}")
         raise
@@ -153,8 +157,7 @@ def unzip_and_deploy(uri):
 
 def backup_manual(manual_name):
     try:
-        now = datetime.now()
-        formatted_time = now.strftime("_%Y-%m-%d_%H-%M-%S")
+        formatted_time = get_formatted_time()
 
         kebab_case_name = manual_name.lower().replace(' - ', '-').replace(' ', '-')
         new_file_name = kebab_case_name + formatted_time + '.zip'

@@ -5,10 +5,15 @@
 Cette API permet de générer des manuels depuis un atelier scenari de l'ABES puis de les déployer sur le serveur web http://documentation.abes.fr/ en purgeant le manuel existant. 
 Elle permet d'effectuer des déploiements de masse ou à l'unité. Elle construit la liste des manuels selon les données du fichier config/configuration_noms_chemins_manuels.json
 
-Les interfaces de l'API sont respectivement disponibles à ces adresses :
+L'API est disponible à ces adresses :
 - https://documentation.abes.fr/api/v1/
 - https://documentation-test.abes.fr/api/v1/
 - https://documentation-dev.abes.fr/api/v1/
+
+L'interface utilisateurs est disponible à ces adresses :
+- https://documentation.abes.fr/dashboard/access
+- https://documentation-test.abes.fr/dashboard/access
+- https://documentation-dev.abes.fr/dashboard/access
 
 ## Prérequis
 
@@ -22,7 +27,7 @@ Installez les dépendances Python nécessaires :
 ```Bash
 pip install -r requirements.txt
 pip install lib/scenaripy_api-6.4.0.tar.gz
-pip install lib/branch/SCENARIchain-server_6.3.13final_python.tar.gz
+pip install lib/branch_name/SCENARIchain-server_6.3.13final_python.tar.gz
 ```
 
 ### Étape 2 : Configurer les Variables d'Environnement
@@ -43,21 +48,63 @@ Passer le nom de l'environnement en argument (develop|test|main)
 docker build --build-arg DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER=develop -t abes-documentation-api-publish .
 ```
 
-## Accéder à l'API
-L'API sera accessible à l'adresse http://localhost:8000. Vous pouvez interagir avec l'API via un navigateur web ou des outils comme Postman ou cURL.
-
 ## Utiliser Swagger UI
-Accédez à http://localhost:8000/docs pour interagir avec l'API via l'interface Swagger.
+Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via l'interface Swagger.
 
 ## Endpoints
-**GET /list/{workshop_key}** : Liste des manuels disponibles dans l'atelier.
 
-**PUT /deploy/{workshop_key}** : Déclenche la génération d'un ou plusieurs manuels.<br>
-Exemple : /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
+### Liste des Manuels Disponibles
+> **GET /list/{workshop_key}**
+> - **Description** : Récupère la liste des manuels disponibles dans l'atelier spécifié.
+> - **Paramètres** :
+>     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel récupérer les manuels.
+> - **Exemple de Requête** :
+>   GET /deploy/atelier2?manuals=manuelBacon&manuals=manuelItem
 
-**PUT /deploy_all/{workshop_key}** : Déclenche la génération de tous les manuels de l'atelier.
+### Déclencher la Génération de Manuels
+> **PUT /deploy/{workshop_key}**
+> - **Description** : Déclenche la génération d'un ou plusieurs manuels pour l'atelier spécifié.
+> - **Paramètres** :
+>     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel générer les manuels.
+>     - `manuals` (string, optionnel) : Le nom des manuels à générer. Peut être spécifié plusieurs fois.
+>     - `save` (string, requis) : à True, l'API sauvegarde une copie du fichier zip de génération dans le dossier html/sauvegardes_automatiques/.
+> - **Exemple de Requête** :
+>   PUT /deploy/atelier2?save=true&manuals=manuelBacon&manuals=manuelItem
 
-**PUT /purge/{workshop_key}** : Supprime les dossiers et fichiers web générés par scenari (ne supprime pas les ressources de formation).<br>
-Exemple : /purge/atelier2?manuals=ManuelPeriscope&manuals=ManuelLicencesNationales&manuals=ManuelItem
+### Déclencher la Génération de Tous les Manuels
+> **PUT /deploy_all/{workshop_key}**
+> - **Description** : Déclenche la génération de tous les manuels de l'atelier spécifié.
+> - **Paramètres** :
+>     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel générer tous les manuels.
+>     - `save` (string, requis) : à True, l'API sauvegarde une copie du fichier zip de génération dans le dossier html/sauvegardes_automatiques/.
+> - **Exemple de Requête** :
+>   PUT /deploy_all/atelier1?save=false
 
-**GET /list/workshops** : Liste des ateliers disponibles et du nom de la clé à utiliser dans la route de l'atelier.
+### Supprimer les Dossiers et Fichiers Web Générés
+> **PUT /purge/{workshop_key}**
+> - **Description** : Supprime les dossiers et fichiers web générés par scenari (ne supprime pas les ressources de formation).
+> - **Paramètres** :
+>     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel supprimer les fichiers.
+>     - `manuals` (string, optionnel) : Le nom des manuels dont les fichiers doivent être supprimés. Peut être spécifié plusieurs fois.
+> - **Exemple de Requête** :
+>   PUT /purge/atelier2?manuals=ManuelPeriscope&manuals=ManuelLicencesNationales&manuals=ManuelItem
+
+### Liste des Ateliers Disponibles
+> **GET /list/workshops**
+> - **Description** : Récupère la liste des ateliers disponibles et du nom de la clé à utiliser dans la route de l'atelier.
+> - **Exemple de Requête** :
+>   GET /list/workshops
+
+### Liste des Ateliers avec Erreurs
+> **GET /list/errors**
+> - **Description** : Récupère la liste des noms d'ateliers présents dans le fichier de configuration, pour lesquels l'API a rencontré une erreur en appelant le serveur scenarichain.
+> - **Exemple de Requête** :
+>   GET /list/errors
+
+### Vérification du Nom de l'Atelier
+> **GET /list/check-workshop-name**
+> - **Description** : Vérifie si un nom d'atelier est valide ou disponible.
+> - **Paramètres** :
+>     - `wsp_name` (string, requis) : Le nom de l'atelier à vérifier.
+> - **Exemple de Requête** :
+>   GET /list/check-workshop-name?wsp_name=Documentation

@@ -38,7 +38,7 @@ def create_app():
         lifespan=lifespan,
         root_path="/dashboard",
         prefix="/dashboard",
-        title="API de publication des manuels de l'ABES",
+        title="API Scenari Publish",
         docs_url=None,
         redoc_url=None,
         swagger_ui_parameters={

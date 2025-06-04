@@ -186,7 +186,7 @@ def remove_zip():
 
 def generate_manual(pub_uri, workshop_title, manual_name):
     generator_code = GENERATOR_TYPES_CONFIG[GENERATOR_TYPES_LIST[manual_name]]
-    logger.info(f"Type de générateur de publication appelé : {generator_code} (GENERATOR_TYPES_LIST[manual_name])")
+    logger.info(f"Type de générateur de publication appelé : {generator_code} ({GENERATOR_TYPES_LIST[manual_name]})")
 
     scenari_portal = ScenariChainServerPortal(workshop_title)
     scenari_portal.generate(pub_uri, generator_code)

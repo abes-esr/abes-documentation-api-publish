@@ -24,13 +24,13 @@ class ScenariChainServerPortal:
             logger.error(f"Erreur lors de l'appel au serveur scchainserver_6_3 : {e}")
             raise
 
-    def generate(self, pub_uri):
+    def generate(self, pub_uri, generator_code):
         try:
             if os.path.exists(self.gen_path):
                 logger.info(f"Suppression de {self.gen_path}")
                 os.remove(self.gen_path)
             # Warning function wsp_generate does not raise exceptions but logs errors though
-            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack="referenceW",
+            data = api.wsp_generate(self.server, self.wsp_code, ref_uri=pub_uri, code_gen_stack=generator_code,
                              props={"skin": config.DOCUMENTATION_API_PUBLISH_SKIN}, local_file_path=self.gen_path)
 
             # timeout checks creation of file

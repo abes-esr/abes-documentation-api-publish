@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import HTTPException
 from app.load_config import SCENARI_MANUALS_ARRAY, SCENARI_DEPLOYMENT_ARRAY, DIRECTORIES_TO_PURGE, FILES_TO_PURGE, \
-    CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST
+    CONFIG_WORKSHOPS_LIST, CONFIG_WORKSHOPS_ERROR_LIST, GENERATOR_TYPES_LIST, GENERATOR_TYPES_CONFIG
 from ..utils.misc import find_files, is_file_in_list, get_formatted_time, write_report
 from ..utils.scenari_chain_server_portal import ScenariChainServerPortal
 from app.config import config
@@ -44,14 +44,14 @@ def deploy_manuals(manuals, workshop_title, save):
                 raise FileNotFoundError(
                     f"Le dossier '{deployment_manuals_map[manual]}' n'existe pas.")
 
-            generate_manual(scenari_manuals_map[manual], workshop_title)
+            generate_manual(scenari_manuals_map[manual], workshop_title, manual)
             purge_directory(manual, workshop_title)
             unzip_and_deploy(deployment_manuals_map[manual])
             if save:
                 backup_manual(manual)
             remove_zip()
 
-            results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "success", "code": 200})
+            results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "type": GENERATOR_TYPES_LIST[manual], "status": "success", "code": 200})
         except HTTPException as http_e:
             results.append(
                 {"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "error", "code": http_e.status_code,
@@ -184,9 +184,12 @@ def remove_zip():
         raise
 
 
-def generate_manual(pub_uri, workshop_title):
+def generate_manual(pub_uri, workshop_title, manual_name):
+    generator_code = GENERATOR_TYPES_CONFIG[GENERATOR_TYPES_LIST[manual_name]]
+    logger.info(f"Type de générateur de publication appelé : {generator_code} ({GENERATOR_TYPES_LIST[manual_name]})")
+
     scenari_portal = ScenariChainServerPortal(workshop_title)
-    scenari_portal.generate(pub_uri)
+    scenari_portal.generate(pub_uri, generator_code)
     del scenari_portal
 
 

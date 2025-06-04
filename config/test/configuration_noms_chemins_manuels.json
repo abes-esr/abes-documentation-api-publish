@@ -15,14 +15,6 @@
 "atelier": "Documentation"
 },
 
- {
- "name": "FOAD - Exercices de dédoublonnage",
-"cheminScenari": "FOAD/DedoublonnageExercices/00-Structure/ExercicesDeDedoublonnage.pub",
-"cheminDeploiement": "/foad/exercicesdedoublonnage",
-"cheminSauvegarde": "",
-"atelier": "Documentation"
-},
-
 {
  "name": "FOAD - Introduction à la formation initiale catalogueur Sudoc Tuto",
 "cheminScenari": "FOAD/IntroductionINITSudoc/00_StructureTutoriel/IntroductionINITsudoc.pub",

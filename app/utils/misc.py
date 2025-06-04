@@ -154,4 +154,4 @@ def write_report(result):
                 file.write(f"Détail: {deployment['detail']}\n")
             file.write("\n")
 
-    logger.info(f"Le rapport a été écrit dans {file_path}")
+    logger.info(f"Le rapport a été enregistré dans {file_path}")

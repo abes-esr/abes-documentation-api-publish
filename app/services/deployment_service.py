@@ -53,11 +53,11 @@ def deploy_manuals(manuals, workshop_title, save):
             results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "type": GENERATOR_TYPES_LIST[manual], "status": "success", "code": 200})
         except HTTPException as http_e:
             results.append(
-                {"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "error", "code": http_e.status_code,
+                {"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "type": GENERATOR_TYPES_LIST[manual] , "status": "error", "code": http_e.status_code,
                  "details": http_e.detail})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
-            results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "error", "code": 500,
+            results.append({"name": manual, "workshop": workshop_title, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "type": GENERATOR_TYPES_LIST[manual] , "status": "error", "code": 500,
                             "detail": str(e)})
 
     sorted_results = sorted(results, key=lambda x: x["code"])
@@ -95,7 +95,7 @@ def purge_directory_list(manuals, workshop_title):
             else:
                 manual = manual_enum.value
             purge_directory(manual, workshop_title)
-            results.append({"name": manual, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "status": "success", "code": 200})
+            results.append({"name": manual, "scenari_pub_path": scenari_manuals_map[manual], "deployment_path": deployment_manuals_map[manual], "type": GENERATOR_TYPES_LIST[manual] , "status": "success", "code": 200})
         except Exception as e:
             logger.error(f"Erreur lors du déploiement du manuel {manual}: {e}")
             results.append({"name": manual, "path": deployment_manuals_map[manual], "status": "error", "code": 500,

@@ -35,6 +35,8 @@ def load_configuration_files():
             deployment_path = SCENARI_DEPLOYMENT_ARRAY[workshop_title][manual_name]
             if deployment_path.startswith('/'):
                 deployment_path = deployment_path[1:]
+            if not deployment_path.endswith('/'):
+                deployment_path += '/'
             SCENARI_DEPLOYMENT_ARRAY[workshop_title][manual_name] = os.path.join(config.DOCUMENTATION_API_PUBLISH_LOCAL_PATH, deployment_path)
         for manual_name in SCENARI_MANUALS_ARRAY[workshop_title]:
             scenari_path = SCENARI_MANUALS_ARRAY[workshop_title][manual_name]

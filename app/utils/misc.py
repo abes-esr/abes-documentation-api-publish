@@ -1,9 +1,14 @@
+import hashlib
 import os
+import shutil
 import socket
 import logging
 import json
+from datetime import datetime
 
+from app import config
 from app.utils.scenari_chain_server_portal import ScenariChainServerPortal
+import re
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -78,3 +83,75 @@ def create_workshop_list(config_data):
         logger.info(f"Le fichier {error_file} a été créé.")
     except Exception as e:
         logger.error(e)
+
+def calculate_file_checksum(zip_path):
+    """Calculate the SHA-256 checksum of a ZIP file."""
+    sha256 = hashlib.sha256()
+    with open(zip_path, 'rb') as f:
+        while chunk := f.read(8192):
+            sha256.update(chunk)
+    return sha256.hexdigest()
+
+
+def is_file_in_list(target_file_path, file_list):
+    """Check if the target file has the same checksum as any file in the list."""
+    target_checksum = calculate_file_checksum(target_file_path)
+
+    for file_path in file_list:
+        file_list_checksum = calculate_file_checksum(config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH + file_path)
+        if file_list_checksum == target_checksum:
+            return True
+
+    return False
+
+
+def find_files(zip_file_name, directory_path):
+    """Find files in the directory that match the partial name, ignoring the date in the filename."""
+    # Regex pattern to match the partial nasme with any date format
+    pattern = re.compile(r'.*' + re.escape(zip_file_name) + r'.*')
+
+    matching_files = []
+    # List all files in the directory
+    for file_name in os.listdir(directory_path):
+        file_path = os.path.join(directory_path, file_name)
+        if os.path.isfile(file_path) and pattern.match(file_name):
+            matching_files.append(file_name)
+
+    return matching_files
+
+
+def copy_file_to_directory(source_file, destination_directory):
+    try:
+        os.makedirs(destination_directory, exist_ok=True)
+
+        shutil.copy(source_file, destination_directory)
+
+        logger.info(f"Fichier {source_file} copié vers {destination_directory}")
+    except Exception as e:
+        logger.info(f"Erreur lors de la copie du fichier : {e}")
+
+
+def get_formatted_time():
+    now = datetime.now()
+    formatted_time = now.strftime("_%Y-%m-%d_%H-%M-%S")
+    return formatted_time
+
+def write_report(result):
+    file_path = config.DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH + "rapport-de-publication_" + get_formatted_time() + ".log"
+    with open(file_path, "w", encoding="utf-8") as file:
+        for deployment in result:
+            if 'name' in deployment:
+                file.write(f"Nom: {deployment['name']}\n")
+            if 'workshop' in deployment:
+                file.write(f"Atelier: {deployment['workshop']}\n")
+            if 'scenari_pub_path' in deployment:
+                file.write(f"Chemin de publication Scenari: {deployment['scenari_pub_path']}\n")
+            if 'status' in deployment:
+                file.write(f"Statut: {deployment['status']}\n")
+            if 'code' in deployment:
+                file.write(f"Code: {deployment['code']}\n")
+            if 'detail' in deployment:
+                file.write(f"Détail: {deployment['detail']}\n")
+            file.write("\n")
+
+    logger.info(f"Le rapport a été enregistré dans {file_path}")

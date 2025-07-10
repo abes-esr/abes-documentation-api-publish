@@ -24,8 +24,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_deploy_manuals_route(workshop: str, workshop_title: str):
-        # @router.put(f"/deploy/{workshop}", tags=[f"Atelier : {workshop_title}"], dependencies=[Depends(get_api_key)])
-        @router.put(f"/deploy/{workshop}", tags=[f"Atelier : {workshop_title}"])
+        @router.put(f"/deploy/{workshop}", tags=[f"Atelier : {workshop_title}"], dependencies=[Depends(get_api_key)])
         async def publier_un_ou_plusieurs_manuels_scenari_de_cet_atelier (
                 save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur"),
                 manuals: list[ManualEnum] = Query(...)
@@ -41,7 +40,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_deploy_all_manuals(workshop: str, workshop_title: str):
-        @router.put(f"/deploy_all/{workshop}", tags=[f"Atelier : {workshop_title}"])
+        @router.put(f"/deploy_all/{workshop}", tags=[f"Atelier : {workshop_title}"], dependencies=[Depends(get_api_key)])
         async def publier_tous_les_manuels_scenari_de_cet_atelier(
                 save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur")
         ):
@@ -56,7 +55,7 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
 
 
     def create_delete_manuals(workshop: str, workshop_title: str):
-        @router.delete(f"/purge/{workshop}", tags=[f"Atelier : {workshop_title}"])
+        @router.delete(f"/purge/{workshop}", tags=[f"Atelier : {workshop_title}"], dependencies=[Depends(get_api_key)])
         async def purger_du_serveur_un_ou_plusieurs_manuels_scenari_de_cet_atelier(manuals: list[ManualEnum] = Query(...)):
             """
             Purge des répertoires du serveur Documentation les manuels Scenari sélectionnés. Supprime uniquement les dossiers et fichiers constituant les manuels Scenari (skin, res, co, lib-md, meta, lib-sc, index.html) et ne purge pas les autres fichiers présents dans les répertoires.

@@ -6,8 +6,11 @@ Cette API permet de générer des manuels depuis un atelier scenari de l'ABES pu
 Elle permet d'effectuer des déploiements de masse ou à l'unité. Elle permet également de faire des sauvegardes courantes. Elle construit la liste des manuels selon les données du fichier ***config-module/config/configuration_noms_chemins_manuels.json***
 L'interface swagger sert d'interface utilisateur.
 
-Le GitHub de l’API :
+Le dépôt de l’API :
 - https://github.com/abes-esr/abes-documentation-api-publish
+
+Le dépôt qui centralise les fichiers de configuration :
+- https://github.com/abes-esr/abes-documentation-api-publish-config
 
 L'API est disponible à ces adresses :
 - https://documentation.abes.fr/api/v1/

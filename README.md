@@ -3,7 +3,7 @@
 
 
 Cette API permet de générer des manuels depuis un atelier scenari de l'ABES puis de les déployer sur le serveur web http://documentation.abes.fr/ en purgeant préalablement des répertoires du serveur web la version précédente des manuels. 
-Elle permet d'effectuer des déploiements de masse ou à l'unité. Elle permet également de faire des sauvegardes courantes. Elle construit la liste des manuels selon les données du fichier ***/config/configuration_noms_chemins_manuels.json***
+Elle permet d'effectuer des déploiements de masse ou à l'unité. Elle permet également de faire des sauvegardes courantes. Elle construit la liste des manuels selon les données du fichier ***config-module/config/configuration_noms_chemins_manuels.json***
 L'interface swagger sert d'interface utilisateur.
 
 Le GitHub de l’API :
@@ -30,8 +30,8 @@ Installez les dépendances Python nécessaires :
 
 ```Bash
 pip install -r requirements.txt
-pip install lib/scenaripy_api-6.4.0.tar.gz
-pip install lib/branch_name/SCENARIchain-server_6.3.13final_python.tar.gz
+pip install config-module/lib/scenaripy_api-6.4.0.tar.gz
+pip install config-module/lib/branch_name/SCENARIchain-server_6.3.13final_python.tar.gz
 ```
 
 ### Étape 2 : Configurer les Variables d'Environnement

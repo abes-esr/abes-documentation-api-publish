@@ -2,10 +2,10 @@
 /.env
 /html/*
 /docker/
-/config/scenari_manuals.json
-/config/configuration_noms_chemins_manuels.json
-/config/scenari_ateliers.json
-/config/scenari_ateliers_erreurs.json
+/config-module/config/scenari_manuals.json
+/config-module/config/configuration_noms_chemins_manuels.json
+/config-module/config/scenari_ateliers.json
+/config-module/config/scenari_ateliers_erreurs.json
 logs/
 **/__pycache__/
 venv/

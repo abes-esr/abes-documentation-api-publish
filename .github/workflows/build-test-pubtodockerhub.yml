@@ -29,12 +29,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: "Update submodules"
-        run: |
-           git submodule update --init --recursive
-
       - name: "Build: checkout source code"
         uses: actions/checkout@v2
+        with:
+           submodules: recursive
+           
       - name: "Build: build docker image"
         run: |
           docker build --build-arg DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER=${GITHUB_REF#refs/heads/} . -t localimage:latest

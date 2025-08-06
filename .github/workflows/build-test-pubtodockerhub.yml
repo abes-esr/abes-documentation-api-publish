@@ -29,6 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+      - name: "Update submodules"
+        run: |
+           git submodule update --init --recursive
+
       - name: "Build: checkout source code"
         uses: actions/checkout@v2
       - name: "Build: build docker image"

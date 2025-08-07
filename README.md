@@ -42,6 +42,9 @@ pip install config-module/lib/branch_name/SCENARIchain-server_6.3.13final_python
 cp ./.env_dist ./.env
 ```
 
+### Étape 3 : Dossier de configuration
+Créez un dossier **config** à la racine du projet dans lequel vous collerez les fichiers compris dans **config-module/module/** : *generator_types_codes.json*, *items_to_purge.json* et le fichier *configuration_noms_chemins_manuels.json* correspondant au serveur scenarichain avec lequel vous travaillez (develop|test|main).
+
 ## Lancer l'API Localement
 Pour lancer l'API localement sans Docker :
 

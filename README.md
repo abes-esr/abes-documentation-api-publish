@@ -34,7 +34,7 @@ Installez les dépendances Python nécessaires :
 ```Bash
 pip install -r requirements.txt
 pip install config-module/lib/scenaripy_api-6.4.0.tar.gz
-pip install config-module/lib/branch_name/SCENARIchain-server_6.3.13final_python.tar.gz
+pip install config-module/lib/branch_name/SCENARIchain-server_6.3final_python.tar.gz
 ```
 
 ### Étape 2 : Configurer les Variables d'Environnement

@@ -23,6 +23,8 @@ on:
       - test
       - develop
   workflow_dispatch:
+  repository_dispatch:
+    types: [update_config_files]
 
 jobs:
   build-test-pubtodockerhub:

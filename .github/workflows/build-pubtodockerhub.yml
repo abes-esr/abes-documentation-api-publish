@@ -1,4 +1,4 @@
-name: "build-test-pubtodockerhub"
+name: "build-pubtodockerhub"
 
 # IMPORTANT : personnalisez cette variable pour que les images
 # de votre application soient pousées sur dockerhub
@@ -23,8 +23,6 @@ on:
       - test
       - develop
   workflow_dispatch:
-  repository_dispatch:
-    types: [update_config_files]
 
 jobs:
   build-pubtodockerhub:

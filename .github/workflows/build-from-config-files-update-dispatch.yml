@@ -1,16 +1,19 @@
-name: "build-from-config-files-update-dispatch"
+name: "build-test-pubtodockerhub"
 env:
   DOCKERHUB_IMAGE_PREFIX: abesesr/documentation
 on:
+  workflow_dispatch:
   repository_dispatch:
-    types: [update_config_files]
+    types: [ update_config_files ]
 
 jobs:
+  # traitement des trois branches
   build-from-config-files-update-dispatch:
+    if: github.event_name == 'repository_dispatch' && github.event.action == 'update_config_files'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        branch: ["main", "test", "develop"]
+        branch: [ "main", "test", "develop" ]
     steps:
       - name: "Build: checkout source code (${{ matrix.branch }})"
         uses: actions/checkout@v4
@@ -32,8 +35,7 @@ jobs:
         with:
           images: ${{ env.DOCKERHUB_IMAGE_PREFIX }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=tag
+            type=raw,value=${{ matrix.branch }},enable=${{ matrix.branch != '' }}
 
       - name: "Push: login to DockerHub"
         run: |

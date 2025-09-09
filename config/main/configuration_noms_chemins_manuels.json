@@ -887,6 +887,22 @@
 "atelier": "Documentation - Espagnol"
 },
 
+ {
+ "name": "AideThesesFr Bibliomap",
+"cheminScenari": "/ManuelsTheses/BibliomapThesesFr/00-Structure/BibliomapThesesFr.pub",
+"cheminDeploiement": "/aidethesesfr/bibliomap",
+"type": "reference",
+"atelier": "Documentation"
+},
+
+{
+ "name": "AideThesesFr ezMesure",
+"cheminScenari": "/ManuelsTheses/EzMesureThesesFr/00-Structure/StatistiquesConsultationsThesesFr.pub",
+"cheminDeploiement": "/aidethesesfr/ezmesure",
+"type": "reference",
+"atelier": "Documentation"
+},
+ 
 {
  "name": "Webstats - Statistiques Sudoc",
 "cheminScenari": "ManuelsWebstats/2-StatSudoc/00-Structure/StatSudoc.pub",

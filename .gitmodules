@@ -1,3 +1,4 @@
 [submodule "config-module"]
 	path = config-module
 	url = https://github.com/abes-esr/abes-documentation-api-publish-config
+    branch = main

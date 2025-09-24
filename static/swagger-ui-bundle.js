@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
             buttonContainer.className = 'button-container';
 
             const button1 = document.createElement('a');
-            button1.href = 'https://github.com/abes-esr/abes-documentation-api-publish';
+            button1.href = 'https://github.com/abes-esr/abes-documentation-api-publish-config';
             button1.className = 'button';
             button1.textContent = 'Accéder au GitHub';
 

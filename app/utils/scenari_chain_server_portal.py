@@ -3,9 +3,9 @@ from time import monotonic as timer
 import time
 from app.config import config
 import logging
-import scchainserver_6_3
+import scchainserver_6_4
 import scenaripy_api as api
-from scchainserver_6_3 import portal
+from scchainserver_6_4 import portal
 
 logger = logging.getLogger('uvicorn.error')
 

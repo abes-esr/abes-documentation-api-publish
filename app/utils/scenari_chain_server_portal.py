@@ -1,19 +1,21 @@
 import os
 from time import monotonic as timer
 import time
-from app.config import config
 import logging
-import scchainserver_6_4
+from app.config import config
 import scenaripy_api as api
-from scchainserver_6_4 import portal
+import importlib
 
 logger = logging.getLogger('uvicorn.error')
+
+scchainserver = importlib.import_module(f"scchainserver_{config.DOCUMENTATION_API_PUBLISH_SCENARI_VERSION}")
+portal = importlib.import_module(f"scchainserver_{config.DOCUMENTATION_API_PUBLISH_SCENARI_VERSION}.portal")
 
 
 class ScenariChainServerPortal:
     def __init__(self, workshop_title):
         try:
-            self.server = scchainserver_6_4.portal.new_portal(
+            self.server = scchainserver.portal.new_portal(
                 override_props={"user": config.DOCUMENTATION_API_PUBLISH_USER, "password": config.DOCUMENTATION_API_PUBLISH_PASSWORD})
             logger.info(f"Connexion au serveur scenari effectuée : {self.server}")
             logger.info(f"Recherche de l'atelier : {workshop_title}")
@@ -21,7 +23,7 @@ class ScenariChainServerPortal:
             logger.info(f"Code de l'atelier {workshop_title} : {self.wsp_code}")
             self.gen_path = config.DOCUMENTATION_API_PUBLISH_ZIP_PATH
         except Exception as e:
-            logger.error(f"Erreur lors de l'appel au serveur scchainserver_6_4 : {e}")
+            logger.error(f"Erreur lors de l'appel au serveur scchainserver : {e}")
             raise
 
     def generate(self, pub_uri, generator_code):

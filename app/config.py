@@ -1,4 +1,3 @@
-import os
 from pydantic.v1 import BaseSettings
 
 
@@ -10,6 +9,7 @@ class Config(BaseSettings):
     DOCUMENTATION_API_PUBLISH_LOCAL_PATH: str
     DOCUMENTATION_API_PUBLISH_LOCAL_BACKUP_PATH: str
     DOCUMENTATION_API_PUBLISH_API_KEY: str
+    DOCUMENTATION_API_PUBLISH_SCENARI_VERSION: str
 
     class Config:
         env_file = ".env"

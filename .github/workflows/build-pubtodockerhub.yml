@@ -36,7 +36,12 @@ jobs:
 
       - name: "Build: update submodules"
         run: |
+          git submodule sync
           git submodule update --init --recursive
+          cd config-module
+          git checkout main
+          git pull origin main
+          cd ..
 
       - name: "Build: build docker image"
         run: |

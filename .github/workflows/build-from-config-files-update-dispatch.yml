@@ -1,4 +1,4 @@
-name: "build-test-pubtodockerhub"
+name: "build-from-config-files-update-dispatch"
 env:
   DOCKERHUB_IMAGE_PREFIX: abesesr/documentation
 on:

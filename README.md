@@ -63,6 +63,16 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 
 ## Endpoints
 
+
+### Vérifier l'avancement d'un déploiement
+> **GET /check_task/{task_id}**
+> - **Description** : Récupère l'état de la tâche lancée par /deploy_all.
+> - **Paramètres** :
+    >     - `task_id` (string, requis) : L'identifiant uuid de la tache dont on veut connaître l'avancement. task_id est envoyé avec la réponse à la requête du service /deploy_all.
+> - **Exemple de Requête** :
+    >   GET /check_task?task_id=0e17083c-7e90-43d1-8daf-3d141f8f8fb5
+
+
 ### Liste des Manuels Disponibles
 > **GET /list/{workshop_key}**
 > - **Description** : Récupère la liste des manuels disponibles dans l'atelier spécifié.
@@ -83,7 +93,7 @@ Accédez à http://localhost:8000/dashboard/access pour interagir avec l'API via
 
 ### Déclencher la Génération de Tous les Manuels
 > **PUT /deploy_all/{workshop_key}**
-> - **Description** : Déclenche la génération de tous les manuels de l'atelier spécifié.
+> - **Description** : Asynchrone. Déclenche la génération de tous les manuels de l'atelier spécifié. La réponse contient le uuid de la tâche déclenchée, il permet de suivre son avancement via la route /check_task/{task_id}
 > - **Paramètres** :
 >     - `workshop_key` (string, requis) : La clé de l'atelier pour lequel générer tous les manuels.
 >     - `save` (string, requis) : à True, l'API sauvegarde une copie du fichier zip de génération dans le dossier html/sauvegardes_automatiques/.

@@ -1,13 +1,49 @@
 from enum import Enum
+from uuid import uuid4
+from typing import Dict
+
 from .__init__ import get_api_key
-from fastapi import APIRouter, Query, Depends
+from fastapi import APIRouter, Query, Depends, BackgroundTasks
 from pydantic import BaseModel
+from app.utils.misc import logger
 
 from .load_config import CONFIG_WORKSHOPS_LIST, SCENARI_DEPLOYMENT_ARRAY
 from .services.deployment_service import deploy_manuals, list_manuals, deploy_all_manuals, purge_directory_list, \
     list_workshops, list_errors, check_workshop_name
 
 router = APIRouter()
+## map used to store results so the user can get it further in time
+tasks: Dict[str, str] = {}
+
+@router.get("/check_task/{task_id}", tags=[f"Vérifier l'avancement d'un déploiement"])
+async def get_deploy_result(task_id: str):
+    """
+    Get async task result
+    """
+    task = tasks.get(task_id)
+    if not task:
+        return {"error": "Task ID inconnu"}
+    return task
+
+
+async def deploy_all_manuals_async(workshop_title: str, save: bool, task_id: str):
+    try:
+        logger.info(f"Début de la tâche {task_id} pour {workshop_title}")
+        import asyncio
+        loop = asyncio.get_event_loop()
+        async_results = await loop.run_in_executor(
+            None,
+            lambda: deploy_all_manuals(workshop_title, save)
+        )
+        results = {
+            "status": "terminé",
+            "infos": f"Manuels déployés pour {workshop_title}",
+            "data": async_results
+        }
+        tasks[task_id] = results
+    except Exception as e:
+        tasks[task_id] = {"status": "erreur", "error": str(e)}
+
 
 
 ####################################################################
@@ -42,13 +78,26 @@ for workshop, workshop_title in CONFIG_WORKSHOPS_LIST.items():
     def create_deploy_all_manuals(workshop: str, workshop_title: str):
         @router.put(f"/deploy_all/{workshop}", tags=[f"Atelier : {workshop_title}"], dependencies=[Depends(get_api_key)])
         async def publier_tous_les_manuels_scenari_de_cet_atelier(
-                save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur")
+                save: bool = Query(False, description="Sauvegarder une copie du manuel sur le serveur"),
+                background_tasks: BackgroundTasks = BackgroundTasks()
         ):
             """
             Génère tous les manuels de l’atelier Scenari puis les déploie sur le serveur Documentation. Possibilité de sauvegarder tous les manuels dans la foulée de l’opération de publication ou séparément.
             """
-            results = deploy_all_manuals(workshop_title, save)
-            return {"deployments": results}
+            task_id = str(uuid4())
+            tasks[task_id] = {"status": "en cours", "result": None}
+
+            background_tasks.add_task(
+                deploy_all_manuals_async,
+                workshop_title,
+                save,
+                task_id
+            )
+
+            return {
+                "message": "Tâche lancée en arrière-plan, le déploiement de tous les manuels prend environ 7min, entrez la valeur de task_id dans la route /check_task pour vérifier l'avancement et récupérer le rapport",
+                "task_id": task_id
+            }
 
 
     create_deploy_all_manuals(workshop, workshop_title)

@@ -1,0 +1,53 @@
+name: "buildx-testpubtodockerhub"
+
+env:
+  DOCKERHUB_IMAGE_PREFIX: abesesr/documentation
+
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - '.github/**'
+  pull_request:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [ update_config_files ]
+
+jobs:
+  buildx-testpubtodockerhub:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Build: checkout source code"
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - name: "Push: prepare version from git tags/branchs"
+        id: docker_tag_meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.DOCKERHUB_IMAGE_PREFIX }}
+      - name: "Set up Docker Buildx"
+        uses: docker/setup-buildx-action@v4
+      - name: "Login to DockerHub"
+        uses: docker/login-action@v4
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/test' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/'))
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: "Build: update configuration submodule and force checkout to last version"
+        run: |
+          git submodule sync
+          git submodule update --init --recursive
+          cd config-module
+          git checkout main
+          git pull origin main
+          cd ..
+
+      - name: "Build and push"
+        uses: docker/build-push-action@v7
+        with:
+          push: ${{ github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/test' || github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/')) }}
+          tags: ${{ steps.docker_tag_meta.outputs.tags }}-documentation-api-publish
+          build-args: |
+            DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER=${{ github.ref_name }}

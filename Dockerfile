@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 COPY requirements.txt requirements.txt
-COPY config-module/config/${DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER}/* config/
+COPY config-module/config/${DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER}/ config/
 COPY config-module/config/items_to_purge.json config/items_to_purge.json
 COPY config-module/config/generator_types_codes.json config/generator_types_codes.json
 RUN mkdir -p tmp

@@ -3,6 +3,10 @@ ARG DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER
 
 WORKDIR /app
 
+RUN groupadd -g 82 guide && \
+    useradd -u 82 -g 82 -m guide
+USER guide
+
 COPY . .
 COPY requirements.txt requirements.txt
 COPY config-module/config/${DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER}/ config/
@@ -14,5 +18,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install config-module/lib/scenaripy_api-6.4.0.tar.gz
 RUN pip install config-module/lib/${DOCUMENTATION_API_PUBLISH_SCENARI_API_FOLDER}/SCENARIchain-server_final_python.tar.gz
 
-EXPOSE 8000:8000
+EXPOSE 8000
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--log-level", "info"]
